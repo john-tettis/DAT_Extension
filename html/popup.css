@@ -1,0 +1,30 @@
+#popup-container {
+    width: 300px;
+    padding: 20px;
+}
+
+input{
+    padding:.2rem;
+    border-radius: 5px;
+
+}
+.formgroup{
+    margin-top: .5rem;
+}
+#resetShortcut{
+    margin-top: .2rem;
+    display: inline-block;
+    padding: 5px 8px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+#resetShortcut:hover {
+    background-color: #2980b9;
+}

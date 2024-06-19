@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Preferences</title>
+    <link rel="stylesheet" href="popup.css"> 
+</head>
+<body>
+    <div class="container">
+        <form class="input-container">
+        <div class="formgroup">
+            <h2>Shortcut Preferences</h2>
+            <input type="text" id="shortcutDisplay" value="CTRL + /" readonly>
+            <button id="resetShortcut">Reset Shortcut</button>
+
+        </div>
+        <div class="formgroup">
+            <input id="sort-pay"name="filter" type="checkbox">
+            <label for ="filter">Sort Projects By Pay Rate</label>
+            
+        </div>
+        </form>
+    </div>
+    <script src="../scripts/Storage.js"></script>
+    <script src="../scripts/popup.js"></script>
+</body>
+</html>
