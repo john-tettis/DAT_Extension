@@ -1,3 +1,5 @@
+//Stopwatch class stores time elapsed, stores data in chrome.local
+// issue #1
 class Stopwatch {
     constructor() {
         this.loadData().then(() => {
