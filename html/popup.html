@@ -6,10 +6,18 @@
 </head>
 <body>
     <div class="container">
-        <form class="input-container">
+        <div class="timer">
+            <p id="display">00:00:00</p>
+            <div class="buttons">
+                <button id="toggleBtn">Start</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+        <form class="input-container"></form>
         <div class="formgroup">
-            <h2>Shortcut Preferences</h2>
-            <input type="text" id="shortcutDisplay" value="CTRL + /" readonly>
+            <h2>Preferences</h2>
+            <label for="shortcut">Skip Task Key Binds </label>
+            <input name="shorcut" type="text" id="shortcutDisplay" value="CTRL + /" readonly>
             <button id="resetShortcut">Reset Shortcut</button>
 
         </div>
@@ -20,6 +28,7 @@
         </div>
         </form>
     </div>
+    <script src="../scripts/Stopwatch.js"></script>
     <script src="../scripts/Storage.js"></script>
     <script src="../scripts/popup.js"></script>
 </body>

@@ -1,5 +1,7 @@
+// import { stopwatch } from "./Stopwatch";
 
 console.log(Storage)
+console.log({stopwatch,Stopwatch})
 //convert key press values to more readable values for the user
 //ran just before it is displayed to user, data is stored raw computer readable
 function readableKeys(pressedKeys){
@@ -19,10 +21,8 @@ function readableKeys(pressedKeys){
 document.addEventListener('DOMContentLoaded', () => {
     const shortcutDisplay = document.getElementById('shortcutDisplay');
     const resetShortcutButton = document.getElementById('resetShortcut');
-
-
-
-
+    
+    //FORM LOGIC
     const filterProjects = document.getElementById('sort-pay')
     //check for user preference on sortPay, if none found, insert default into storage.
     //Update checkbox to reflect stored value
@@ -35,9 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         shortcutDisplay.value = readableKeys(result.shortcut).join(" + ")           
         //sort projects handled here
             filterProjects.checked = result.sortPay;
-        })
+        });
 
- 
 
     //listen for checkbox to be clicked to affect whether or not to filter projects on main page load
     filterProjects.addEventListener("change",(e)=>{
@@ -83,4 +82,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         keysPressed = [];
     }
+
+    //TIMER LOGIC
+    const timerToggle = document.getElementById('toggleBtn')
+    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    const timerReset= document.getElementById('resetBtn')
+
+    timerToggle.addEventListener('click',()=>{
+        stopwatch.toggle()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
+    timerReset.addEventListener('click',()=>{
+        stopwatch.reset()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
+    function updateTime(){
+        const display = document.getElementById('display')
+        display.innerText= stopwatch.formattedTime()
+
+    }
+    setInterval(updateTime,1000)
 });

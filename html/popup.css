@@ -1,15 +1,25 @@
 #popup-container {
     width: 300px;
     padding: 20px;
+    border-radius:20px;
+}
+h2{
+    margin-bottom:.4rem;
 }
 
+label{
+    /* size: 2rem; */
+    font-size: 1.2em;
+    /* padding-bottom: 1rem; */
+}
 input{
     padding:.2rem;
     border-radius: 5px;
-
+    margin-top: .2rem;
 }
 .formgroup{
     margin-top: .5rem;
+    background: rgba(0,0,0,0);
 }
 #resetShortcut{
     margin-top: .2rem;
@@ -27,4 +37,33 @@ input{
 
 #resetShortcut:hover {
     background-color: #2980b9;
+}
+.timer {
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    max-width: 300px;
+    background-color: #f9f9f9;
+}
+
+#display {
+    font-size: 2em;
+}
+.buttons{
+    display:flex;
+}
+.buttons button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.buttons button:hover {
+    background-color: #0056b3;
 }
