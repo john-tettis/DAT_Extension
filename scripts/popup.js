@@ -1,7 +1,24 @@
-// import { stopwatch } from "./Stopwatch";
+//update timer immediately to ensure accurate display
 
-console.log(Storage)
-console.log({stopwatch,Stopwatch})
+function updateTime(){
+    const display = document.getElementById('display')
+    display.innerText= stopwatch.formattedTime()
+
+}
+setInterval(updateTime,500)
+ //TIMER LOGIC
+ const timerToggle = document.getElementById('toggleBtn')
+ timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+ const timerReset= document.getElementById('resetBtn')
+
+ timerToggle.addEventListener('click',()=>{
+     stopwatch.toggle()
+     timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+ })
+ timerReset.addEventListener('click',()=>{
+     stopwatch.reset()
+     timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+ })
 //convert key press values to more readable values for the user
 //ran just before it is displayed to user, data is stored raw computer readable
 function readableKeys(pressedKeys){
@@ -18,6 +35,7 @@ function readableKeys(pressedKeys){
 }
 
 
+ 
 document.addEventListener('DOMContentLoaded', () => {
     const shortcutDisplay = document.getElementById('shortcutDisplay');
     const resetShortcutButton = document.getElementById('resetShortcut');
@@ -98,23 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
         keysPressed = [];
     }
 
-    //TIMER LOGIC
-    const timerToggle = document.getElementById('toggleBtn')
-    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    const timerReset= document.getElementById('resetBtn')
+   
+});
 
-    timerToggle.addEventListener('click',()=>{
-        stopwatch.toggle()
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    })
-    timerReset.addEventListener('click',()=>{
-        stopwatch.reset()
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    })
-    function updateTime(){
-        const display = document.getElementById('display')
-        display.innerText= stopwatch.formattedTime()
-
-    }
-    setInterval(updateTime,1000)
+// Add an event listener for the beforeunload event
+//remove timer data to start fresh
+window.addEventListener('beforeunload', function(event) {
+    // Clear the chrome.storage.local data
+    chrome.storage.local.clear(function() {
+        console.log("Local storage data cleared on window close.");
+    });
 });
