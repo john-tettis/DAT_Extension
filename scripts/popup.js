@@ -118,12 +118,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
    
 });
-
-// Add an event listener for the beforeunload event
-//remove timer data to start fresh
-window.addEventListener('beforeunload', function(event) {
-    // Clear the chrome.storage.local data
-    chrome.storage.local.clear(function() {
-        console.log("Local storage data cleared on window close.");
-    });
-});
