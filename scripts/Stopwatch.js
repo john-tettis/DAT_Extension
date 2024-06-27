@@ -88,8 +88,7 @@ class Stopwatch {
         const dataToSave = {
             startTime: this.startTime,
             elapsedTime: this.elapsedTime,
-            isRunning: this.isRunning,
-            formattedTime:this.formattedTime()
+            isRunning: this.isRunning
         };
         await new Promise((resolve) => {
             chrome.storage.local.set(dataToSave, () => {
