@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "matches": ["https://app.dataannotation.tech/*"],
-      "js": ["./scripts/darkMode.js"]
+      "js": ["./scripts/darkMode.js","./scripts/stopWatchOverlay.js"]
     },
     {
       "matches": ["https://app.dataannotation.tech/workers/tasks/*"],
