@@ -1,24 +1,11 @@
 //update timer immediately to ensure accurate display
-
 function updateTime(){
     const display = document.getElementById('display')
     display.innerText= stopwatch.formattedTime()
 
 }
 setInterval(updateTime,500)
- //TIMER LOGIC
- const timerToggle = document.getElementById('toggleBtn')
- timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
- const timerReset= document.getElementById('resetBtn')
-
- timerToggle.addEventListener('click',()=>{
-     stopwatch.toggle()
-     timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
- })
- timerReset.addEventListener('click',()=>{
-     stopwatch.reset()
-     timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
- })
+ 
 //convert key press values to more readable values for the user
 //ran just before it is displayed to user, data is stored raw computer readable
 function readableKeys(pressedKeys){
@@ -37,6 +24,19 @@ function readableKeys(pressedKeys){
 
  
 document.addEventListener('DOMContentLoaded', () => {
+    //initialize timer buttons
+    const timerToggle = document.getElementById('toggleBtn')
+    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    const timerReset= document.getElementById('resetBtn')
+
+    timerToggle.addEventListener('click',()=>{
+        stopwatch.toggle()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
+    timerReset.addEventListener('click',()=>{
+        stopwatch.reset()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
     const shortcutDisplay = document.getElementById('shortcutDisplay');
     const resetShortcutButton = document.getElementById('resetShortcut');
     
