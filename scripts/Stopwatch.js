@@ -39,7 +39,6 @@ class Stopwatch {
     toggle() {
         this.isRunning ? this.pause() : this.start();
     }
-
     reset() {
         this.startTime = 0;
         this.elapsedTime = 0;
@@ -84,7 +83,6 @@ class Stopwatch {
     }
 
     async saveData() {
-        console.log(this)
         const dataToSave = {
             startTime: this.startTime,
             elapsedTime: this.elapsedTime,
@@ -99,3 +97,4 @@ class Stopwatch {
 }
 
 const stopwatch = new Stopwatch();
+
