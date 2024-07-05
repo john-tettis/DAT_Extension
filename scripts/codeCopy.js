@@ -56,24 +56,66 @@ document.addEventListener('click', function (event) {
 }); 
 
 // Event listener for mouseover (hover in) on the document
-document.addEventListener('mouseover', function(event) {
-    const preElement = event.target.closest('pre');
-    if (preElement) {
-        const rgb = window.getComputedStyle(preElement).backgroundColor;
-        preElement.style.backgroundColor = increaseBrightness(rgb, 20); // Brighten background color
-        preElement.style.cursor = 'pointer'; // Change cursor on hover
-        // Additional styles or actions can be added here for hover in
-    }
-});
+// document.addEventListener('mouseover', function(event) {
+//     const preElement = event.target.closest('pre');
+//     if (preElement) {
+//         const rgb = window.getComputedStyle(preElement).backgroundColor;
+//         preElement.style.backgroundColor = increaseBrightness(rgb, 20); // Brighten background color
+//         preElement.style.cursor = 'pointer'; // Change cursor on hover
+//         // Additional styles or actions can be added here for hover in
+//     }
+// });
 
-// Event listener for mouseout (hover out) on the document
-document.addEventListener('mouseout', function(event) {
-    const preElement = event.target.closest('pre');
-    if (preElement) {
-        preElement.style.backgroundColor = ''; // Reset background color on hover out
-        preElement.style.cursor = 'auto'; // Reset cursor on hover out
-        // Additional reset styles or actions can be added here if needed
-    }
+// // Event listener for mouseout (hover out) on the document
+// document.addEventListener('mouseout', function(event) {
+//     const preElement = event.target.closest('pre');
+//     if (preElement) {
+//         preElement.style.backgroundColor = ''; // Reset background color on hover out
+//         preElement.style.cursor = 'auto'; // Reset cursor on hover out
+//         // Additional reset styles or actions can be added here if needed
+//     }
+// });
+ // Event listener for mouseover (hover in) on the document   
+ //model A      
+//  document.addEventListener('mouseover', function(event)         {  
+//     const preElement = event.target.closest('pre');                 
+//           if (preElement) {
+//         //commented previous line
+//         preElement.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.2)';
+//         preElement.style.transform = 'scale(1.01)';
+//         preElement.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+//          // Additional styles or actions can be added here for hover in                
+//     }                 
+// });                 
+//   // Event listener for mouseout (hover out) on the document                  
+//  document.addEventListener('mouseout', function(event) {         const preElement = event.target.closest('pre');                  
+//     if (preElement) {                    
+//         preElement.style.boxShadow = 'none';
+//         preElement.style.transform = 'scale(1)';
+//         preElement.style.transition = 'transform 0.2s ease, box-shadow 0s ease';                   
+//       // Reset styles for hover out                
+//     }                
+// });
+//modelb
+ // Event listener for mouseover (hover in) on the document         
+ document.addEventListener('mouseover', function(event)         {  
+    const preElement = event.target.closest('pre');                 
+          if (preElement) {
+        //commented previous line
+        preElement.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.2)';
+        preElement.style.transform = 'scale(1.01)';
+        preElement.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+         // Additional styles or actions can be added here for hover in                
+    }                 
+});                 
+  // Event listener for mouseout (hover out) on the document                  
+ document.addEventListener('mouseout', function(event) {         const preElement = event.target.closest('pre');                  
+    if (preElement) {                    
+        preElement.style.boxShadow = 'none';
+        preElement.style.transform = 'scale(1)';
+        preElement.style.transition = 'transform 0.2s ease, box-shadow 0s ease';                   
+      // Reset styles for hover out                
+    }                
 });
 
 // Function to copy text to clipboard
