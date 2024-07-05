@@ -14,7 +14,15 @@
   },
   "content_scripts": [
     {
+<<<<<<< HEAD
       "matches": ["https://app.dataannotation.tech/workers/tasks/*","https://codeium.com/*"],
+=======
+      "matches": ["https://app.dataannotation.tech/*"],
+      "js": ["./scripts/darkMode.js"]
+    },
+    {
+      "matches": ["https://app.dataannotation.tech/workers/tasks/*"],
+>>>>>>> master
       "js": ["./scripts/skipCommand.js","./scripts/codeCopy.js"]
     },
     {

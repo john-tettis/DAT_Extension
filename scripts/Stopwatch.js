@@ -4,20 +4,20 @@ class Stopwatch {
     constructor() {
         this.loadData().then(() => {
             if (this.isRunning) {
-                const currentTime = performance.now();
+                const currentTime = Date.now();
                 const elapsedTimeSinceStart = currentTime - this.startTime;
                 this.startTime = currentTime;
                 this.elapsedTime += elapsedTimeSinceStart;
                 this.interval = setInterval(() => {
                     this.saveData();
-                }, 1000); // Save data every second
+                }, 500); // Save data every half second
             }
         });
     }
 
     start() {
         if (!this.isRunning) {
-            this.startTime = performance.now();
+            this.startTime = Date.now();
             this.isRunning = true;
             this.saveData();
             this.interval = setInterval(() => {
@@ -28,7 +28,7 @@ class Stopwatch {
 
     pause() {
         if (this.isRunning) {
-            const currentTime = performance.now();
+            const currentTime = Date.now();
             this.elapsedTime += currentTime - this.startTime;
             this.isRunning = false;
             clearInterval(this.interval);
@@ -50,7 +50,7 @@ class Stopwatch {
 
     time() {
         if (this.isRunning) {
-            const currentTime = performance.now();
+            const currentTime = Date.now();
             return this.elapsedTime + (currentTime - this.startTime);
         } else {
             return this.elapsedTime;
@@ -88,7 +88,7 @@ class Stopwatch {
         const dataToSave = {
             startTime: this.startTime,
             elapsedTime: this.elapsedTime,
-            isRunning: this.isRunning,
+            isRunning: this.isRunning
         };
         await new Promise((resolve) => {
             chrome.storage.local.set(dataToSave, () => {

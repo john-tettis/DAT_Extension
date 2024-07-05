@@ -1,7 +1,11 @@
-// import { stopwatch } from "./Stopwatch";
+//update timer immediately to ensure accurate display
+function updateTime(){
+    const display = document.getElementById('display')
+    display.innerText= stopwatch.formattedTime()
 
-console.log(Storage)
-console.log({stopwatch,Stopwatch})
+}
+setInterval(updateTime,500)
+ 
 //convert key press values to more readable values for the user
 //ran just before it is displayed to user, data is stored raw computer readable
 function readableKeys(pressedKeys){
@@ -18,30 +22,59 @@ function readableKeys(pressedKeys){
 }
 
 
+ 
 document.addEventListener('DOMContentLoaded', () => {
+    //initialize timer buttons
+    const timerToggle = document.getElementById('toggleBtn')
+    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    const timerReset= document.getElementById('resetBtn')
+
+    timerToggle.addEventListener('click',()=>{
+        stopwatch.toggle()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
+    timerReset.addEventListener('click',()=>{
+        stopwatch.reset()
+        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
+    })
     const shortcutDisplay = document.getElementById('shortcutDisplay');
     const resetShortcutButton = document.getElementById('resetShortcut');
     
     //FORM LOGIC
     const filterProjects = document.getElementById('sort-pay')
+    const darkMode = document.getElementById('darkMode')
     //check for user preference on sortPay, if none found, insert default into storage.
     //Update checkbox to reflect stored value
     
     
     // retreive storage data for form info
-    Storage.get(['shortcut','sortPay'],[["CONTROL","/"],true])
+    Storage.get(['shortcut','sortPay','darkMode'],[["CONTROL","/"],true,false])
     .then((result) => {
         //shortcut info handled here
         shortcutDisplay.value = readableKeys(result.shortcut).join(" + ")           
-        //sort projects handled here
-            filterProjects.checked = result.sortPay;
+        //project sort input and darkmode input display updated based off of chrome storage
+        filterProjects.checked = result.sortPay;
+        darkMode.checked = result.darkMode
         });
 
 
     //listen for checkbox to be clicked to affect whether or not to filter projects on main page load
     filterProjects.addEventListener("change",(e)=>{
         const value = e.target.checked
-        chrome.storage.sync.set({sortPay:value})
+        Storage.set({sortPay:value})
+    })
+    //listen for darkMode to be toggled, update storage
+    darkMode.addEventListener("change",(e)=>{
+        function toggleDarkMode(bool) {
+            const darkModeStatus = { darkMode: bool };
+            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, darkModeStatus);
+            });
+        }
+        
+        const value = e.target.checked
+        toggleDarkMode(value)
+        Storage.set({darkMode:value})
     })
     //listen for shortcut input to be selected
     shortcutDisplay.addEventListener('click', () => {
@@ -83,23 +116,5 @@ document.addEventListener('DOMContentLoaded', () => {
         keysPressed = [];
     }
 
-    //TIMER LOGIC
-    const timerToggle = document.getElementById('toggleBtn')
-    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    const timerReset= document.getElementById('resetBtn')
-
-    timerToggle.addEventListener('click',()=>{
-        stopwatch.toggle()
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    })
-    timerReset.addEventListener('click',()=>{
-        stopwatch.reset()
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start'
-    })
-    function updateTime(){
-        const display = document.getElementById('display')
-        display.innerText= stopwatch.formattedTime()
-
-    }
-    setInterval(updateTime,1000)
+   
 });
