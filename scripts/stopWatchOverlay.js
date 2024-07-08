@@ -58,13 +58,15 @@ let stopwatch = {
 
 
 //fetch initial stopwatch time
-chrome.storage.local.get(['startTime','isRunning', 'elapsedTimeg'],(data)=>{
+chrome.storage.local.get(['startTime','isRunning', 'elapsedTime'],(data)=>{
     const {elapsedTime,startTime, isRunning} = data;
+    console.log(data)
     stopwatch = { 
         elapsedTime: elapsedTime ? elapsedTime : stopwatch.elapsedTime,
         startTime: startTime ? startTime : stopwatch.startTime,
         isRunning: isRunning ? isRunning : stopwatch.isRunni
      };
+     console.log(stopwatch)
      setInterval(()=>{
         const time = formattedTime(stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
         display.textContent = time;
