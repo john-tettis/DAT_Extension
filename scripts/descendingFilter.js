@@ -1,6 +1,8 @@
 /*Searches data annotation for pay filter on projects group
-    returns: HTML element button to be clicked
-
+* Automatically clicks through elements to sort by highest paying or "descending"
+*
+*ISSUE #4 - Home Page not Loading
+*
 */
 function findPayFilter(){
     const headers = document.querySelectorAll('h3')
