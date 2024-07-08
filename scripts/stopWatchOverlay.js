@@ -68,7 +68,8 @@ chrome.storage.local.get(['startTime','isRunning', 'elapsedTime'],(data)=>{
      };
      console.log(stopwatch)
      setInterval(()=>{
-        const time = formattedTime(stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
+        
+        const time = formattedTime(stopwatch.startTime === 0 ? 0 : stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
         display.textContent = time;
 
     },500)
@@ -79,12 +80,14 @@ chrome.storage.local.get(['startTime','isRunning', 'elapsedTime'],(data)=>{
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     if(namespace == 'local'){
         const {elapsedTime,startTime, isRunning} = changes
+        console.log(changes)
         let newStopWatch = {
             elapsedTime: elapsedTime ? elapsedTime.newValue : stopwatch.elapsedTime,
             startTime: startTime ? startTime.newValue : stopwatch.startTime,
             isRunning: isRunning ? isRunning.newValue : stopwatch.isRunning
          };
          stopwatch =newStopWatch
+        console.log(stopwatch)
     }
 });
 
