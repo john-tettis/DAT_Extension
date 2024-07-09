@@ -91,3 +91,16 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
 });
 
+//event listener to make sure stopwatch does not go on top off navbar
+window.addEventListener('scroll', function() {
+    // var fixedDiv = document.getElementById('fixedDiv');
+    var navbar = document.querySelector('.navbar');
+    console.log(navbar)
+    console.log(window.scrollY,navbar.clientHeight)
+    
+    if (window.scrollY <= navbar.clientHeight) {
+       container.style.top = navbar.clientHeight + 'px';
+    } else {
+      container.style.top = '50px';
+    }
+  });
