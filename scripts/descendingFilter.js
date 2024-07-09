@@ -7,23 +7,35 @@
 function findPayFilter(){
     const headers = document.querySelectorAll('h3')
     let projectHeader = null;
+    let qualHeader = null;
 
     for(let i=0; i<headers.length;i++){
         if(headers[i].innerText == "Projects"){
             projectHeader = headers[i]
-            break
+        }
+        if(headers[i].innerText == "Qualifications"){
+            qualHeader = headers[i]
         }
     }
+    console.log(projectHeader,qualHeader)
     if(!projectHeader){
+        throw ValueError('Project Header not found')
+    }
+    if(!qualHeader){
         throw ValueError('Project Header not found')
     }
     const payFilter = projectHeader.parentNode.parentNode.querySelectorAll("button")[1]
     //select project container, then rows inside container, subtract 1 for the header, returns count
     const projectCount  = projectHeader.parentNode.parentNode.querySelectorAll('tr').length -1
     projectHeader.innerText = `Projects (${projectCount})`
-    console.log
-    return {payFilter}
+    //same logic as above but for qualifications
+    const qualCount  = qualHeader.parentNode.parentNode.parentNode.querySelectorAll('tr').length -1
+    qualHeader.innerText = `Qualifications (${qualCount})`;
+    return payFilter
 }
+
+
+
 //clicks the payfilter to display filter menu
 function clickPayFilter(){
     PAY_FILTER.click()
