@@ -18,7 +18,11 @@ function findPayFilter(){
         throw ValueError('Project Header not found')
     }
     const payFilter = projectHeader.parentNode.parentNode.querySelectorAll("button")[1]
-    return payFilter
+    //select project container, then rows inside container, subtract 1 for the header, returns count
+    const projectCount  = projectHeader.parentNode.parentNode.querySelectorAll('tr').length -1
+    projectHeader.innerText = `Projects (${projectCount})`
+    console.log
+    return {payFilter}
 }
 //clicks the payfilter to display filter menu
 function clickPayFilter(){
@@ -28,8 +32,9 @@ function clickPayFilter(){
 //clicks descending filter option
 function clickDescending(){
     const descending= document.getElementsByClassName('tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-4 tw-transition tw-w-full tw-bg-black-100 hover:tw-bg-white-5')
-    console.log(descending[2])
     descending[2].click()
+    descending[2].parentNode.parentNode.style.display = 'none'
+    // console.log(descending[2].parentNode.parentNode)
     return descending[2].parentNode.nextSibling
 }
 //clicks apply in filter menu
@@ -50,8 +55,8 @@ function main(){
             clickApply(applyParent)
             setTimeout(function(){
                 clickPayFilter()
-            },100)
-        },100)
+            },300)
+        },300)
     }, 500);
 }
 
