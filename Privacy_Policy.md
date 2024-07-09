@@ -24,7 +24,7 @@ At DAT Extension, we prioritize the privacy and security of our users. This Priv
 
 ## Contact DAT Extension:
 
-- For inquiries, concerns, or feedback regarding DAT Extension or this Privacy Policy, please reach out to me  [here](mailto:johndavidtettis@gmail.com)
+- For inquiries, concerns, or feedback regarding DAT Extension or this Privacy Policy, please reach out to me  [here](mailto:info.dat.ext@gmail.com)
 ## Policy Updates:
 
 - DAT Extension reserves the right to revise or update this Privacy Policy as necessary. Any modifications will be communicated through the extension.
