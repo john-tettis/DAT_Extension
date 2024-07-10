@@ -5,10 +5,8 @@
 let highlightRules = []; 
 
 chrome.storage.sync.get(['highlightRules'], (result) => {
-  console.log(result.highlightRules);
   highlightProjectRows(result.highlightRules); 
 });
-
 
 
 function isProjectNameMatch(projectName, key) {
@@ -25,7 +23,6 @@ function highlightProjectRows(highlightRules) {
     const projectName = projectNameCell.textContent;
 
     for (let rule of highlightRules) {
-      console.log("Checking if.." + rule.regex + " matches " + projectName);
       if (isProjectNameMatch(projectName, rule.regex)) {
         row.style.backgroundColor = rule.color;
       }
@@ -33,7 +30,6 @@ function highlightProjectRows(highlightRules) {
   }
   );
 }
-
 
 
 // Below: WIP Code for automatic colour coding via extraction and hashing of project name. 
