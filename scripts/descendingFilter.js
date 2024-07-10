@@ -1,23 +1,41 @@
 /*Searches data annotation for pay filter on projects group
-    returns: HTML element button to be clicked
-
+* Automatically clicks through elements to sort by highest paying or "descending"
+*
+*ISSUE #4 - Home Page not Loading
+*
 */
 function findPayFilter(){
     const headers = document.querySelectorAll('h3')
     let projectHeader = null;
+    let qualHeader = null;
 
     for(let i=0; i<headers.length;i++){
         if(headers[i].innerText == "Projects"){
             projectHeader = headers[i]
-            break
+        }
+        if(headers[i].innerText == "Qualifications"){
+            qualHeader = headers[i]
         }
     }
+    console.log(projectHeader,qualHeader)
     if(!projectHeader){
         throw ValueError('Project Header not found')
     }
+    if(!qualHeader){
+        throw ValueError('Project Header not found')
+    }
     const payFilter = projectHeader.parentNode.parentNode.querySelectorAll("button")[1]
+    //select project container, then rows inside container, subtract 1 for the header, returns count
+    const projectCount  = projectHeader.parentNode.parentNode.querySelectorAll('tr').length -1
+    projectHeader.innerText = `Projects (${projectCount})`
+    //same logic as above but for qualifications
+    const qualCount  = qualHeader.parentNode.parentNode.parentNode.querySelectorAll('tr').length -1
+    qualHeader.innerText = `Qualifications (${qualCount})`;
     return payFilter
 }
+
+
+
 //clicks the payfilter to display filter menu
 function clickPayFilter(){
     PAY_FILTER.click()
@@ -26,8 +44,9 @@ function clickPayFilter(){
 //clicks descending filter option
 function clickDescending(){
     const descending= document.getElementsByClassName('tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-4 tw-transition tw-w-full tw-bg-black-100 hover:tw-bg-white-5')
-    console.log(descending[2])
     descending[2].click()
+    descending[2].parentNode.parentNode.style.display = 'none'
+    // console.log(descending[2].parentNode.parentNode)
     return descending[2].parentNode.nextSibling
 }
 //clicks apply in filter menu
@@ -48,8 +67,8 @@ function main(){
             clickApply(applyParent)
             setTimeout(function(){
                 clickPayFilter()
-            },100)
-        },100)
+            },300)
+        },300)
     }, 500);
 }
 

@@ -55,46 +55,64 @@ document.addEventListener('click', function (event) {
     }
 }); 
 
-// Event listener for mouseover (hover in) on the document
-document.addEventListener('mouseover', function(event) {
-    const preElement = event.target.closest('pre');
-    if (preElement) {
-      // Brighten background color
-        const rgb = window.getComputedStyle(preElement).backgroundColor;
-        preElement.style.backgroundColor = increaseBrightness(rgb, 20);
-        // brighten children background if necessary
-        //I have found if pre.background-color == rgba(0,0,0,0) that changing this value does nothing
-        //and you must change the children as well
-        console.log(rgb)
-        if(rgb == "rgba(0, 0, 0, 0)"){
-          for (let i = 0; i < preElement.children.length; i++) {
-            const element = preElement.children[i];
-            const rgb = window.getComputedStyle(element).backgroundColor;
-            element.style.backgroundColor = increaseBrightness(rgb, 20); // Example: log tag name of each child
-        }
-        }
+// // Event listener for mouseover (hover in) on the document
+// document.addEventListener('mouseover', function(event) {
+//     const preElement = event.target.closest('pre');
+//     if (preElement) {
+//       // Brighten background color
+//         const rgb = window.getComputedStyle(preElement).backgroundColor;
+//         preElement.style.backgroundColor = increaseBrightness(rgb, 20);
+//         // brighten children background if necessary
+//         //I have found if pre.background-color == rgba(0,0,0,0) that changing this value does nothing
+//         //and you must change the children as well
+//         console.log(rgb)
+//         if(rgb == "rgba(0, 0, 0, 0)"){
+//           for (let i = 0; i < preElement.children.length; i++) {
+//             const element = preElement.children[i];
+//             const rgb = window.getComputedStyle(element).backgroundColor;
+//             element.style.backgroundColor = increaseBrightness(rgb, 20); // Example: log tag name of each child
+//         }
+//         }
         
-        preElement.style.cursor = 'pointer'; // Change cursor on hover
-        // Additional styles or actions can be added here for hover in
-    }
-});
+//         preElement.style.cursor = 'pointer'; // Change cursor on hover
+//         // Additional styles or actions can be added here for hover in
+//     }
+// });
 
-// Event listener for mouseout (hover out) on the document
-document.addEventListener('mouseout', function(event) {
-    const preElement = event.target.closest('pre');
-    if (preElement) {
-        preElement.style.backgroundColor = ''; // Reset background color on hover out
-        preElement.style.cursor = 'auto'; // Reset cursor on hover out
-        //reset children background if necessary
-        if(window.getComputedStyle(preElement).backgroundColor =='rgba(0, 0, 0, 0)'){
-          for (let i = 0; i < preElement.children.length; i++) {
-            const element = preElement.children[i];
-            element.style.backgroundColor = ''
-          }
-        } 
-    }
+// // Event listener for mouseout (hover out) on the document
+// document.addEventListener('mouseout', function(event) {
+//     const preElement = event.target.closest('pre');
+//     if (preElement) {
+//         preElement.style.backgroundColor = ''; // Reset background color on hover out
+//         preElement.style.cursor = 'auto'; // Reset cursor on hover out
+//         //reset children background if necessary
+//         if(window.getComputedStyle(preElement).backgroundColor =='rgba(0, 0, 0, 0)'){
+//           for (let i = 0; i < preElement.children.length; i++) {
+//             const element = preElement.children[i];
+//             element.style.backgroundColor = ''
+//           }
+//         } 
+//     }
+// });
+//new event listeners for glow effect. less intrusive.
+document.addEventListener('mouseover', function(event)         {  
+    const preElement = event.target.closest('pre');                 
+          if (preElement) {
+        preElement.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.2)';
+        preElement.style.transform = 'scale(1.02)';
+        preElement.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+         // Additional styles or actions can be added here for hover in                
+    }                 
+});                 
+  // Event listener for mouseout (hover out) on the document                  
+ document.addEventListener('mouseout', function(event) {         const preElement = event.target.closest('pre');                  
+    if (preElement) {                    
+        preElement.style.boxShadow = 'none';
+        preElement.style.transform = 'scale(1)';
+        preElement.style.transition = 'transform 0.2s ease, box-shadow 0s ease';                   
+      // Reset styles for hover out                
+    } 
 });
-
 // Function to copy text to clipboard
 function copyTextToClipboard(text) { 
     navigator.clipboard.writeText(text).then(function () { 
