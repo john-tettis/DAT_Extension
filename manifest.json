@@ -23,7 +23,7 @@
     },
     {
       "matches": ["https://app.dataannotation.tech/workers/projects"],
-      "js": ["./scripts/descendingFilter.js"]
+      "js": ["./scripts/descendingFilter.js","./scripts/colorCode.js"]
     }
   ]
 }
