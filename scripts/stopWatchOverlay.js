@@ -27,7 +27,7 @@ styles.textContent = `
     .stopwatch-container{
         position: fixed;
         right:10px;
-        top: 50px;
+        top: 100px;
     }
     .timer-ext{
         position: absolute;
@@ -95,12 +95,12 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 window.addEventListener('scroll', function() {
     // var fixedDiv = document.getElementById('fixedDiv');
     var navbar = document.querySelector('.navbar');
-    console.log(navbar)
-    console.log(window.scrollY,navbar.clientHeight)
+    // console.log(navbar)
+    // console.log(window.scrollY,navbar.clientHeight, container.style.top)
     
-    if (window.scrollY <= navbar.clientHeight) {
-       container.style.top = navbar.clientHeight + 'px';
+    if (window.scrollY >= navbar.clientHeight) {
+       container.style.top = '50px';
     } else {
-      container.style.top = '50px';
+      container.style.top =  `${navbar.clientHeight - window.scrollY + 50}px`;
     }
   });
