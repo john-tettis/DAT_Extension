@@ -15,15 +15,24 @@
   "content_scripts": [
     {
       "matches": ["https://app.dataannotation.tech/*"],
-      "js": ["./scripts/darkMode.js","./scripts/stopWatchOverlay.js"]
+      "js": [
+        "./scripts/darkMode.js",
+        "./scripts/stopWatchOverlay.js"
+      ]
     },
     {
       "matches": ["https://app.dataannotation.tech/workers/tasks/*"],
-      "js": ["./scripts/skipCommand.js","./scripts/codeCopy.js"]
+      "js": [
+        "./scripts/skipCommand.js",
+        "./scripts/codeCopy.js"
+      ]
     },
     {
       "matches": ["https://app.dataannotation.tech/workers/projects"],
-      "js": ["./scripts/descendingFilter.js"]
+      "js": [
+        "./scripts/descendingFilter.js", 
+        "./scripts/colorCodeProjects.js"
+      ]
     }
   ]
 }
