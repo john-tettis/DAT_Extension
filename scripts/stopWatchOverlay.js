@@ -66,21 +66,28 @@ chrome.storage.local.get(['startTime','isRunning', 'elapsedTime'],(data)=>{
         startTime: startTime ? startTime : stopwatch.startTime,
         isRunning: isRunning ? isRunning : stopwatch.isRunni
      };
-     console.log(stopwatch)
-     setInterval(()=>{
-        
-        const time = formattedTime(stopwatch.startTime === 0 ? 0 : stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
-        display.textContent = time;
-
-    },500)
-    
+    //  console.log(stopwatch)
+     function updateTimer(){
+        if(stopwatch.isRunning){
+            // stopwatch.startTime === 0 ? 0 : 
+            const time = formattedTime(stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
+            display.textContent = time;
+            
+        }
+        else{
+            const time = formattedTime(stopwatch.elapsedTime)
+            display.textContent = time;
+        }
+        window.requestAnimationFrame(updateTimer)
+     }
+     updateTimer()
 
 })
 // Add a listener to detect changes in chrome.storage.local
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     if(namespace == 'local'){
         const {elapsedTime,startTime, isRunning} = changes
-        console.log(changes)
+        // console.log(changes)
         let newStopWatch = {
             elapsedTime: elapsedTime ? elapsedTime.newValue : stopwatch.elapsedTime,
             startTime: startTime ? startTime.newValue : stopwatch.startTime,
