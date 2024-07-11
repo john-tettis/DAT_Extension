@@ -1,10 +1,11 @@
 //update timer immediately to ensure accurate display
+const display = document.getElementById('display')
 function updateTime(){
-    const display = document.getElementById('display')
+    
     display.innerText= stopwatch.formattedTime()
-
+    window.requestAnimationFrame(updateTime)
 }
-setInterval(updateTime,500)
+updateTime()
  
 //convert key press values to more readable values for the user
 //ran just before it is displayed to user, data is stored raw computer readable
