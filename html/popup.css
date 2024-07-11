@@ -21,7 +21,7 @@ input{
     margin-top: .5rem;
     background: rgba(0,0,0,0);
 }
-#resetShortcut{
+.form-button{
     margin-top: .2rem;
     display: inline-block;
     padding: 5px 8px;
@@ -35,7 +35,7 @@ input{
     transition: all 0.3s;
 }
 
-#resetShortcut:hover {
+.form-button:hover {
     background-color: #2980b9;
 }
 .timer {
