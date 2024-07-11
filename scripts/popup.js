@@ -185,3 +185,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
+//event listeners to change active page
+
+const changePage= document.getElementById('move');
+let isHomePage = true;
+const container = document.querySelector('.container')
+
+changePage.addEventListener('click',()=>{
+    if(isHomePage){
+        container.style.right ='250px'
+        setTimeout(()=>{
+            container.style.width='350px'
+
+        },400)
+        changePage.innerText ='Return'
+    }
+    else{
+        container.style.right ='0'
+        setTimeout(()=>{
+            container.style.width='250px'
+
+        },400)
+        changePage.innerText ='Highlight Rules'
+    }
+    isHomePage=!isHomePage
+    
+})
