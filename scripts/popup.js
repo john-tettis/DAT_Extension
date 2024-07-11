@@ -76,8 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
         rules.forEach(rule => addRuleRow(rule.regex, rule.color) );
     }
 
-    function deleteRuleRow(btn) {
-        const row = btn.parentNode.parentNode;
+    function deleteRuleRow(e) {
+        const row = e.target.parentNode.parentNode;
+       
         row.parentNode.removeChild(row);
     }
 
@@ -88,10 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const phraseCell = row.insertCell();
         const colorCell = row.insertCell();
         const actionCell = row.insertCell();
+        const deleteButton = document.createElement('button')
+        deleteButton.classList.add('deleteBtn')
+        deleteButton.innerText = 'X'
 
         phraseCell.innerHTML = `<input type="text" value="${regex}">`;
         colorCell.innerHTML = `<input type="color" value="${color}">`;
-        actionCell.innerHTML = `<button class="deleteBtn" onclick="deleteRuleRow(this)">X</button>`;
+        actionCell.appendChild(deleteButton)
+        deleteButton.addEventListener('click',deleteRuleRow)
     }
 
     document.getElementById("addRuleBtn").addEventListener("click", () => {
