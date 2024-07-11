@@ -67,3 +67,14 @@ input{
 .buttons button:hover {
     background-color: #0056b3;
 }
+
+/* Styling for Colour Rules Table */
+#rulesTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#rulesTable th, #rulesTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}

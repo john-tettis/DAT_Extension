@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //FORM LOGIC
     const filterProjects = document.getElementById('sort-pay')
     const darkMode = document.getElementById('darkMode')
+    
     //check for user preference on sortPay, if none found, insert default into storage.
     //Update checkbox to reflect stored value
     
@@ -57,6 +58,67 @@ document.addEventListener('DOMContentLoaded', () => {
         darkMode.checked = result.darkMode
         });
 
+
+    // COLOR HIGHLIGHTING CODE 
+    // Load Highlight rules. I'm aware of the above, but want to avoid doing everything in one function call. 
+    Storage.get(["highlightRules"], [[]])
+    .then(data => {
+        const rules = data.highlightRules; 
+        populateColorRulesTable(rules);
+    })
+    .catch(error => {
+        console.error("Error loading rules:", error);
+    });
+
+    // Function to populate the table with rules
+    function populateColorRulesTable(rules) {
+        const table = document.getElementById("rulesTable");
+        rules.forEach(rule => addRuleRow(rule.regex, rule.color) );
+    }
+
+    function deleteRuleRow(btn) {
+        const row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    // Function to add a new rule row to the table
+    function addRuleRow(regex, color) {
+        const table = document.getElementById("rulesTable");
+        const row = table.insertRow();
+        const phraseCell = row.insertCell();
+        const colorCell = row.insertCell();
+        const actionCell = row.insertCell();
+
+        phraseCell.innerHTML = `<input type="text" value="${regex}">`;
+        colorCell.innerHTML = `<input type="color" value="${color}">`;
+        actionCell.innerHTML = `<button class="deleteBtn" onclick="deleteRuleRow(this)">X</button>`;
+    }
+
+    document.getElementById("addRuleBtn").addEventListener("click", () => {
+        addRuleRow("", ""); // Add an empty row for a new rule
+    });
+
+    // Save Rules button event listener
+    document.getElementById("saveRulesBtn").addEventListener("click", () => {
+        saveRules(); 
+    });
+
+    // Save updated rules to storage
+    function saveRules() {
+        const table = document.getElementById('rulesTable');
+        let rules = [];
+        for (let i = 1; i < table.rows.length; i++) { // start from 1 to skip header
+            let row = table.rows[i];
+            let regex = row.cells[0].firstChild.value;
+            let color = row.cells[1].firstChild.value;
+            rules.push({ regex, color });
+        }
+    
+        Storage.set({ 'highlightRules': rules })
+            .then(() => alert('Rules saved successfully!'))
+            .catch(err => alert('Error saving rules: ' + err));
+    }
+    ////// END COLOR HIGHLIGHTING CODE
 
     //listen for checkbox to be clicked to affect whether or not to filter projects on main page load
     filterProjects.addEventListener("change",(e)=>{
@@ -116,5 +178,5 @@ document.addEventListener('DOMContentLoaded', () => {
         keysPressed = [];
     }
 
-   
+
 });
