@@ -44,18 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
     //FORM LOGIC
     const filterProjects = document.getElementById('sort-pay')
     const darkMode = document.getElementById('darkMode')
+    const stopWatchOverlay = document.getElementById('stopWatchOverlay')
     //check for user preference on sortPay, if none found, insert default into storage.
     //Update checkbox to reflect stored value
     
     
     // retreive storage data for form info
-    Storage.get(['shortcut','sortPay','darkMode'],[["CONTROL","/"],true,false])
+    Storage.get(['shortcut','sortPay','darkMode','stopWatchOverlay'],[["CONTROL","/"],true,false,false])
     .then((result) => {
         //shortcut info handled here
         shortcutDisplay.value = readableKeys(result.shortcut).join(" + ")           
         //project sort input and darkmode input display updated based off of chrome storage
         filterProjects.checked = result.sortPay;
         darkMode.checked = result.darkMode
+        stopWatchOverlay.checked = result.stopWatchOverlay
+
         });
 
 
@@ -63,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     filterProjects.addEventListener("change",(e)=>{
         const value = e.target.checked
         Storage.set({sortPay:value})
+    })
+    //listen for stopwatch update
+    stopWatchOverlay.addEventListener("change",(e)=>{
+        const value = e.target.checked
+        Storage.set({stopWatchOverlay:value})
     })
     //listen for darkMode to be toggled, update storage
     darkMode.addEventListener("change",(e)=>{
