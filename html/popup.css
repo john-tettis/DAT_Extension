@@ -21,7 +21,7 @@ input{
     margin-top: .5rem;
     background: rgba(0,0,0,0);
 }
-#resetShortcut{
+.form-button{
     margin-top: .2rem;
     display: inline-block;
     padding: 5px 8px;
@@ -35,7 +35,7 @@ input{
     transition: all 0.3s;
 }
 
-#resetShortcut:hover {
+.form-button:hover {
     background-color: #2980b9;
 }
 .timer {
@@ -67,3 +67,45 @@ input{
 .buttons button:hover {
     background-color: #0056b3;
 }
+
+/* Styling for Colour Rules Table */
+#rulesTable {
+    width: 300px;
+    border-collapse: collapse;
+}
+
+#rulesTable th, #rulesTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.container {
+    position: relative;
+    /* width: 100%; */     /* Occupies full width of the viewport */
+    height: 100%;    /* Occupies full height of the viewport */
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: Semi-transparent background */
+    display: flex;   /* Enables horizontal layout for inner containers */
+    /* overflow: hidden; */
+    width: 250px;
+    right:0px;
+    transition: right .3s ease-in,width 0.2s ease-in;
+  }
+
+  
+  .inner-container {
+    flex: 1;
+    /* width:250px; */         /* Makes each inner container take up equal space */
+    background-color: white;  /* Background color for the content area */
+    padding: 20px;   /* Optional: Padding for content */
+  }
+  #move{
+    position: fixed;
+    padding: 5px;
+    right: 20px;
+    border:none;
+    border-radius:5px;
+    background:none;
+    /* font-size: 2rem; */
+  }
+  #move:hover, #move-back:hover{
+   background:#ddd;
+  }
