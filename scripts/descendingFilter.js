@@ -74,7 +74,7 @@ function main(){
 //here we are modifying the qualification container. Often, especially when there are a ton of quals,
 //it gets in the way of looking at projects. We are resizing the container, and addind a resize style to it.
 let qualContainer = document.querySelector(".sc-dcJsrY.kCfoZC.tw-max-w-full.tw-overflow-x-auto")
-    qualContainer.style.height = '300px'
+    qualContainer.style.height = '155px'
     qualContainer.style.resize ='vertical'
 
 chrome.storage.sync.get(['sortPay'], (result) => {
