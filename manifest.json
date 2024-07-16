@@ -18,10 +18,12 @@
   "content_scripts": [
     {
       "matches": [ "https://app.dataannotation.tech/*" ],
-      "js": [
-        "./scripts/darkMode.js",
-        "./scripts/stopWatchOverlay.js"
-      ]
+      "js": [ "./scripts/darkMode.js" ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [ "https://app.dataannotation.tech/*" ],
+      "js": [ "./scripts/stopWatchOverlay.js" ]
     },
     {
       "matches": [ "https://app.dataannotation.tech/workers/tasks/*" ],
