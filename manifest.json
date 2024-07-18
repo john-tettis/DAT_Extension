@@ -43,7 +43,7 @@
   "web_accessible_resources": [
     {
       "matches": [ "https://app.dataannotation.tech/*" ],
-      "resources": [ "./styles/dark-mode.css" ]
+      "resources": [ "styles/dark-mode.css" ]
     }
   ]
 }
