@@ -42,8 +42,11 @@ function storageGetFunction(options, callback, fallbackDefaults = new Array(opti
   if (chrome?.storage?.sync?.get) {
     chrome.storage.sync.get(options, callback);
   }
-  const optionObject = Object.fromEntries(options.map((key, index) => [key, fallbackDefaults[index]]));
-  callback(optionObject);
+  else{
+    const optionObject = Object.fromEntries(options.map((key, index) => [key, fallbackDefaults[index]]));
+    callback(optionObject);
+  }
+ 
 }
 
 /* Sum up all integer values in a table column by index */
