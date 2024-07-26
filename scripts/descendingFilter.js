@@ -153,7 +153,7 @@ storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualificati
   if (sortPay) {
     sortTable(projectsTable, 1, sanitizer_Pay);
   }
-  if (sortQualifications) {
+  if (sortQualifications || sortQualifications == undefined) {
     sortTable(qualificationsTable, 3, sanitizer_Created);
   }
 }, [true, true]);
