@@ -2,7 +2,11 @@
 
 Welcome to the DAT Extension repository! This Chrome extension enhances your workflow with some awesome features!
 
-## Installation
+## Access Stable Release
+   - Add extension directly to chrome through the Chrome Web Store:
+   - [DAT Extension](https://chromewebstore.google.com/detail/dat-extension/olnfeojadebhopefbogmjdpekifcdmkp)
+
+## Installation (BETA versin)
 1. **Download ZIP File:**
    - Click on the "Code" button and select "Download ZIP."
    - Extract the file onto your system in a directory of your choice
