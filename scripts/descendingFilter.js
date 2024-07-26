@@ -14,7 +14,7 @@ function makeSanitizer(baseFunction) {
     return 0;
   }
 }
-
+//Issue #11
 function sortTable(table, sortColumnIndex, sanitizer = ((value) => value.innerText), descending = true) {
   const compareFn = descending ? ((a, b) => b.value - a.value) : ((a, b) => a.value - b.value);
   /* Get all tBody elements in the table as an array. iterate through each,
