@@ -1,86 +1,156 @@
-/*Searches data annotation for pay filter on projects group
-* Automatically clicks through elements to sort by highest paying or "descending"
-*
-*ISSUE #4 - Home Page not Loading
-*
-*/
-function findPayFilter(){
-    const headers = document.querySelectorAll('h3')
-    let projectHeader = null;
-    let qualHeader = null;
-
-    for(let i=0; i<headers.length;i++){
-        if(headers[i].innerText == "Projects"){
-            projectHeader = headers[i]
-        }
-        if(headers[i].innerText == "Qualifications"){
-            qualHeader = headers[i]
-        }
+/* Creates a Wrapper around a sanitizer function with error checking and fallbacks */
+function makeSanitizer(baseFunction) {
+  return function(element) {
+    const innerText = element?.innerText?.trim() ?? '';
+    if (innerText === '') {
+      return 0;
     }
-    console.log(projectHeader,qualHeader)
-    if(!projectHeader){
-        throw ValueError('Project Header not found')
+    try {
+      const sanitizedValue = baseFunction(element);
+      return Number.isNaN(sanitizedValue) ? 0 : sanitizedValue;
+    } catch (error) {
+      console.error('DAT: Encountered an issue when sorting table\n\terror: %s\n\telement: %o\n\tsantizer: %o', error.message, element, sanitizer);
     }
-    if(!qualHeader){
-        throw ValueError('Project Header not found')
-    }
-    const payFilter = projectHeader.parentNode.parentNode.querySelectorAll("button")[1]
-    //select project container, then rows inside container, subtract 1 for the header, returns count
-    const projectCount  = projectHeader.parentNode.parentNode.querySelectorAll('tr').length -1
-    projectHeader.innerText = `Projects (${projectCount})`
-    //same logic as above but for qualifications
-    const qualCount  = qualHeader.parentNode.parentNode.parentNode.querySelectorAll('tr').length -1
-    qualHeader.innerText = `Qualifications (${qualCount})`;
-    return payFilter
+    return 0;
+  }
 }
 
-
-
-//clicks the payfilter to display filter menu
-function clickPayFilter(){
-    PAY_FILTER.click()
+function sortTable(table, sortColumnIndex, sanitizer = ((value) => value.innerText), descending = true) {
+  const compareFn = descending ? ((a, b) => b.value - a.value) : ((a, b) => a.value - b.value);
+  /* Get all tBody elements in the table as an array. iterate through each,
+   * returning an array of rows, then flatten the result. I've seen tables in
+   * other parts of the site with multiple tBodys.  This ia a just-in-case.
+   */
+  const allRows = [...table.tBodies].map((tBody) => [...tBody.rows]).flat();
+    /* an object with two keys, the sanitized "value" for sorting and the "row" element */
+  const workingArray = allRows.map((row) => {
+    const value = sanitizer(row.cells[sortColumnIndex]);
+    return { row, value };
+  });
+  /* Sort the objects by value and return only the row element */
+  const sortedRows = workingArray.sort(compareFn).map((object) => object.row);
+  const rowCount = sortedRows.length;
+  /* Append Rows to Table */
+  const tBody = table.tBodies[0]
+  for (let index = 0; index < rowCount; index++) {
+    tBody.appendChild(sortedRows[index]);
+  }
 }
 
-//clicks descending filter option
-function clickDescending(){
-    const descending= document.getElementsByClassName('tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-4 tw-transition tw-w-full tw-bg-black-100 hover:tw-bg-white-5')
-    descending[2].click()
-    descending[2].parentNode.parentNode.style.display = 'none'
-    // console.log(descending[2].parentNode.parentNode)
-    return descending[2].parentNode.nextSibling
-}
-//clicks apply in filter menu
-function clickApply(parent){
-    let applyContainer = parent.children[1]
-    let apply = applyContainer.children[0].children[1].children[1]
-    apply.click()
+/* Wrapper function to allow for easier testing regardless of API availability */
+function storageGetFunction(options, callback, fallbackDefaults = new Array(options.length).fill(true)) {
+  if (chrome?.storage?.sync?.get) {
+    chrome.storage.sync.get(options, callback);
+  }
+  const optionObject = Object.fromEntries(options.map((key, index) => [key, fallbackDefaults[index]]));
+  callback(optionObject);
 }
 
-
-//create global pay filter variable
-const PAY_FILTER = findPayFilter()
-function main(){
-    clickPayFilter()
-    setTimeout(function(){
-        let applyParent = clickDescending()
-        setTimeout(function(){
-            clickApply(applyParent)
-            setTimeout(function(){
-                clickPayFilter()
-            },300)
-        },300)
-    }, 500);
+/* Sum up all integer values in a table column by index */
+function sumTableColumn(table, columnIndex) {
+  return [...table.rows]
+    .map((row) => row.children[columnIndex])
+    .reduce((accumulator, cell) => {
+      const value = Number.parseInt(cell.innerText);
+      return accumulator + (Number.isNaN(value) ? 0 : value);
+    }, 0);
 }
-//here we are modifying the qualification container. Often, especially when there are a ton of quals,
-//it gets in the way of looking at projects. We are resizing the container, and addind a resize style to it.
-let qualContainer = document.querySelector(".sc-dcJsrY.kCfoZC.tw-max-w-full.tw-overflow-x-auto")
-    qualContainer.style.height = '155px'
-    qualContainer.style.resize ='vertical'
 
-chrome.storage.sync.get(['sortPay'], (result) => {
-    if(result.sortPay == undefined || result.sortPay == true)
-    {
-        main()
-    }   
+/* Should probably add an option to change this, both for personal preference3 and i18l */
+function formatNumber(number, thousandsSeparator = ',') {
+  let decimalValue = '';
+  let string = number.toString();
+  if (string.indexOf('.') > -1) {
+    const array = string.split('.');
+    decimalValue = `.${array[1]}`;
+    string = array[0];
+  }
+  if (string.length > 3) {
+    string = string.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+  }
+  return `${string}${decimalValue}`;
+}
+
+/*   "$##.##/hr"  -->  ##.##   */
+const sanitizer_Pay = makeSanitizer((element) => {
+  return Number.parseFloat(element.innerText.slice(1).split('/')[0]);
 });
 
+/*   "####"  -->  ####   */
+const sanitizer_Tasks = makeSanitizer((element) => {
+  return Numnber.parseInt(element.innerText);
+});
+
+/*   "MMM DD"  -->  ###   (Days from start of year) */
+const sanitizer_Created = makeSanitizer((element) => {
+  const [month, day] = element.innerText.split(' ');
+  const monthIndex = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].indexOf(month.toUpperCase());
+  const daysPriorToStartOfMonth = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334][monthIndex] || 0;
+  return daysPriorToStartOfMonth + Number.parseInt(day);
+});
+
+/* Determines if the item is pinned via className */
+const sanitizer_Pin = makeSanitizer((element) => {
+  return element.classList.contains('tw-animate-unstar') ? 1 : 0;
+});
+
+/* Determines if the item is priority via string matching */
+const sanitizer_Priority = makeSanitizer((element) => {
+  return element.innerText.toUpperCase().indexOf('PRIORITY') > -1 ? 1 : 0;
+});
+
+/* Section Header and Tables, Purposefully Excluding Report Time Section */
+const [qualificationsHeader, projectsHeader] = document.querySelectorAll('h3');
+const [qualificationsTable, projectsTable] = document.querySelectorAll('table');
+
+/* Simple checks to ensure the UI is what we expect */
+const expectedInterface = [
+  qualificationsHeader.innerText.startsWith('Qualifications'),
+  projectsHeader.innerText.startsWith('Projects'),
+  qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
+  projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
+].every((test) => test === true);
+
+/* Throw an Error if it isn't */
+if (expectedInterface === false) {
+  throw new RangeError('DAT: Interface outside expected parameters, There may have been a site update which changed the UI');
+}
+
+/* Add Table Row Counts and Task Counts to their Respective Headers */
+const qualificationsCount = qualificationsTable.rows.length - 1;
+const qualificationsTaskCount = sumTableColumn(qualificationsTable, 2);
+const qualificationHeaderSpan = document.createElement('span');
+qualificationHeaderSpan.style.fontSize = '65%';
+qualificationHeaderSpan.style.verticalAlign = '-15%';
+qualificationHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(qualificationsCount)} with ${formatNumber(qualificationsTaskCount)} tasks`;
+qualificationsHeader.append(qualificationHeaderSpan);
+
+const projectsCount = projectsTable.rows.length - 1;
+const projectsTaskCount = sumTableColumn(projectsTable, 2);
+const projectsHeaderSpan = document.createElement('span');
+projectsHeaderSpan.style.fontSize = '65%';
+projectsHeaderSpan.style.verticalAlign = '-15%';
+projectsHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(projectsCount)} with ${formatNumber(projectsTaskCount)} tasks`;
+projectsHeader.append(projectsHeaderSpan);
+/* Remove flex display to allow verticalAlign to function correctly */
+projectsHeader.classList.remove('tw-flex');
+
+//here we are modifying the qualification container. Often, especially when there are a ton of quals,
+//it gets in the way of looking at projects. We are resizing the container, and addind a resize style to it.
+const accentColor = window.getComputedStyle(document.querySelector("body > div.navbar")).backgroundColor;
+const textColor = window.getComputedStyle(document.querySelector("a.navbar-brand")).color;
+const qualificationsContainer = qualificationsTable.parentElement;
+qualificationsContainer.style.height = '155px';
+qualificationsContainer.style.resize ='vertical';
+qualificationsContainer.style.scrollSnapType = 'y mandatory';
+qualificationsContainer.style.scrollbarWidth = 'thin';
+qualificationsContainer.style.scrollbarColor = `${textColor} ${accentColor}`;
+
+storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
+  if (sortPay) {
+    sortTable(projectsTable, 1, sanitizer_Pay);
+  }
+  if (sortQualifications) {
+    sortTable(qualificationsTable, 3, sanitizer_Created);
+  }
+}, [true, true]);
