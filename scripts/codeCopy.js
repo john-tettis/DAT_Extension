@@ -21,6 +21,7 @@ document.body.appendChild(tooltip);
 // Variable to hold timeout reference for tooltip
 let tooltipTimeout;
 
+
 // Event listener for mousemove to show tooltip near <pre> elements
 document.addEventListener('mousemove', function (event) {
     const preElement = event.target.closest('pre');
@@ -54,46 +55,6 @@ document.addEventListener('click', function (event) {
         }, 1000);
     }
 }); 
-
-// // Event listener for mouseover (hover in) on the document
-// document.addEventListener('mouseover', function(event) {
-//     const preElement = event.target.closest('pre');
-//     if (preElement) {
-//       // Brighten background color
-//         const rgb = window.getComputedStyle(preElement).backgroundColor;
-//         preElement.style.backgroundColor = increaseBrightness(rgb, 20);
-//         // brighten children background if necessary
-//         //I have found if pre.background-color == rgba(0,0,0,0) that changing this value does nothing
-//         //and you must change the children as well
-//         console.log(rgb)
-//         if(rgb == "rgba(0, 0, 0, 0)"){
-//           for (let i = 0; i < preElement.children.length; i++) {
-//             const element = preElement.children[i];
-//             const rgb = window.getComputedStyle(element).backgroundColor;
-//             element.style.backgroundColor = increaseBrightness(rgb, 20); // Example: log tag name of each child
-//         }
-//         }
-        
-//         preElement.style.cursor = 'pointer'; // Change cursor on hover
-//         // Additional styles or actions can be added here for hover in
-//     }
-// });
-
-// // Event listener for mouseout (hover out) on the document
-// document.addEventListener('mouseout', function(event) {
-//     const preElement = event.target.closest('pre');
-//     if (preElement) {
-//         preElement.style.backgroundColor = ''; // Reset background color on hover out
-//         preElement.style.cursor = 'auto'; // Reset cursor on hover out
-//         //reset children background if necessary
-//         if(window.getComputedStyle(preElement).backgroundColor =='rgba(0, 0, 0, 0)'){
-//           for (let i = 0; i < preElement.children.length; i++) {
-//             const element = preElement.children[i];
-//             element.style.backgroundColor = ''
-//           }
-//         } 
-//     }
-// });
 //new event listeners for glow effect. less intrusive.
 document.addEventListener('mouseover', function(event)         {  
     const preElement = event.target.closest('pre');                 
@@ -113,8 +74,23 @@ document.addEventListener('mouseover', function(event)         {
       // Reset styles for hover out                
     } 
 });
+
+
+//code to remove non breaking whitespace rendered 
+ 
+//ugly and invalid in VS Code
+function removeNoBreakSpace(str) {
+    return str.replace(/\u00A0/g, ' ');
+}
+// //test
+// let NoBreakSpaces = "    nonbreaking    ";
+// let StandardSpaces = removeNoBreakSpace(codeWithNoBreakSpaces);
+// console.log(StandardSpaces == "    nonbreaking    ");
+//issue #12
 // Function to copy text to clipboard
 function copyTextToClipboard(text) { 
+    //remove non breaking spaces that render improperly in VS code
+    text = removeNoBreakSpace(text);
     navigator.clipboard.writeText(text).then(function () { 
         // Success message can be added here if needed
     }, function (err) {   
@@ -123,36 +99,3 @@ function copyTextToClipboard(text) {
     }); 
 }
 
-// Function to increase brightness of an RGB color
-function increaseBrightness(rgb, percentIncrease) {
-    // Function to convert RGB string to array of integers
-    function rgbStringToArray(rgbString) {
-        var numbers = rgbString.match(/\d+/g); // Extract numbers using regex
-        var rgbArray = numbers.map(function(num) {
-            return parseInt(num, 10); // Convert string numbers to integers
-        });
-        return rgbArray;
-    }
-
-    // Ensure percentIncrease is a number between 0 and 100
-    percentIncrease = Math.max(0, Math.min(100, percentIncrease));
-
-    // Convert RGB string to array of integers
-    const rgbArray = rgbStringToArray(rgb);
-
-    // Extract RGB components
-    let r = rgbArray[0];
-    let g = rgbArray[1];
-    let b = rgbArray[2];
-
-    // Calculate increase amount for each component
-    let delta = 255 * (percentIncrease / 100);
-
-    // Increase brightness without exceeding 255
-    r = Math.min(r + delta, 255);
-    g = Math.min(g + delta, 255);
-    b = Math.min(b + delta, 255);
-
-    // Return adjusted RGB values as an RGBA string
-    return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 1)`;
-}
