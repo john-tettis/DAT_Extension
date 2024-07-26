@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DAT Extension",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Skip tasks and copy response code easier. Automatically sort tasks by pay.",
   "permissions": [
     "activeTab",
