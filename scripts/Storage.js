@@ -21,7 +21,7 @@ class Storage {
         });
       });
     }
-  
+   
     /**
      * Sets key-value pairs in chrome.storage.sync, updating existing data.
      *
