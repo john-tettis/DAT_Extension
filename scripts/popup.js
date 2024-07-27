@@ -200,25 +200,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //event listeners to change active page
 
+
+/*
+Takes an element and target values, animates it using animation frames
+implemented because adding transition to elements was still very choppy
+*/
+function animatePageChange(element, targetRight, targetWidth){
+    const style = element.style
+    const currR = parseInt(style.right,10);
+    const currW = parseInt(style.width,10)
+    console.log({currW,currR,style})
+   if(currR !== targetRight){
+    const increment = currR < targetRight ? 10:-10;
+    element.style.right = currR + increment + 'px';
+   }
+   else if(currW !== targetWidth){
+    console.log('setting width')
+    element.style.transition = 'width .5s'
+    element.style.width = targetWidth + 'px'
+    return
+   }
+    requestAnimationFrame(()=>animatePageChange(element,targetRight,targetWidth))
+}
 const changePage= document.getElementById('move');
 let isHomePage = true;
 const container = document.querySelector('.container')
+//set default values for animation
+container.style.right = 0;
+container.style.width = '250px';
+
 
 changePage.addEventListener('click',()=>{
     if(isHomePage){
-        container.style.right ='250px'
-        setTimeout(()=>{
-            container.style.width='350px'
+        // container.style.right ='250px'
+        // setTimeout(()=>{
+        //     container.style.width='350px'
 
-        },400)
+        // },400)
+        animatePageChange(container,250,350)
         changePage.innerText ='Return'
     }
     else{
-        container.style.right ='0'
-        setTimeout(()=>{
-            container.style.width='250px'
+        // container.style.right ='0'
+        // setTimeout(()=>{
+        //     container.style.width='250px'
 
-        },400)
+        // },400)
+        animatePageChange(container,0,250)
         changePage.innerText ='Highlight Rules'
     }
     isHomePage=!isHomePage
