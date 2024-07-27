@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById("addRuleBtn").addEventListener("click", () => {
-        addRuleRow("", ""); // Add an empty row for a new rule
+        addRuleRow("", "#000000"); // Add an empty row for a new rule
     });
 
     // Save Rules button event listener
@@ -158,14 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', recordKeyCombination);
         document.addEventListener('keyup', stopRecording);
     });
-
+    //reset shortcut value in storage and in UI
     resetShortcutButton.addEventListener('click', () => {
         shortcutDisplay.value = 'CTRL + /';
         Storage.set({shortcut: ['CONTROL', '/']});
     });
 
-    let keysPressed = [];
 
+
+    //holds keys pressed in series
+    let keysPressed = [];
+    //records keys pressed to hold shortcut
     function recordKeyCombination(event) {
         event.preventDefault();
         const key = event.key.toUpperCase();
@@ -179,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
     }
-
+//stops recording for key combination
     function stopRecording() {
         document.removeEventListener('keydown', recordKeyCombination);
         document.removeEventListener('keyup', stopRecording);
