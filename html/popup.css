@@ -109,9 +109,3 @@ input{
   #move:hover, #move-back:hover{
    background:#ddd;
   }
-  .container {
-  width: 80%;
-  margin: 0 auto;
-  padding: 0 15px; /*adjust the padding value as per your requirement*/ 
-}
-
