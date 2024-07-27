@@ -87,7 +87,7 @@ input{
     /* overflow: hidden; */
     width: 250px;
     right:0px;
-    transition: right .3s ease-in,width 0.2s ease-in;
+    transition: width 0.2s;
   }
 
   
