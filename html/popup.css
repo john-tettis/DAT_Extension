@@ -13,9 +13,9 @@ label{
     /* padding-bottom: 1rem; */
 }
 input{
-    padding:.2rem;
+    /* padding:.2rem; */
     border-radius: 5px;
-    margin-top: .2rem;
+    /* margin-top: .2rem; */
 }
 .formgroup{
     margin-top: .5rem;
@@ -89,6 +89,9 @@ input{
     right:0px;
     transition: width 0.2s;
   }
+  .image-concat{
+    width:200px;
+  }
 
   
   .inner-container {
@@ -109,3 +112,66 @@ input{
   #move:hover, #move-back:hover{
    background:#ddd;
   }
+
+
+  /* Image Concatination */
+
+  #image-container {
+    /* display: flex; */
+    /* flex-wrap: wrap; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* margin-top: 10px; */
+  }
+  
+  .thumbnail {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .thumbnail button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    padding: 5px 7px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  #concatenateBtn {
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    background-color: lightblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  #loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  #loading-spinner img {
+    width: 50px;
+    height: 50px;
+  }
+      
+  Canvas {
+    display: block;
+    margin-top: 10px;
+  } 

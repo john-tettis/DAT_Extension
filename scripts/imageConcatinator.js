@@ -2,10 +2,11 @@
 
 // Global array to store selected images
 let selectedImages = [];
-
+//elect the file input
+const fileInput = document.getElementById('imageInput');
 // Function to handle the image change event
 function handleImageChange() {
-  const fileInput = document.getElementById('imageInput');
+  
   const imageContainer = document.getElementById('image-container');
   imageContainer.innerHTML = ''; // Clear the container
 
@@ -31,7 +32,7 @@ function handleImageChange() {
     img.src = URL.createObjectURL(file);
   }
 }
-
+fileInput.addEventListener("change",handleImageChange)
 // Function to load images
 async function loadImages(images) {
   return Promise.all(images.map((img) => new Promise((resolve) => {

@@ -15,6 +15,17 @@
 						<button id="resetBtn">Reset</button>
 					</div>
 				</div>
+				<div class="image-concat">
+					<h2>Concatenate Images</h2>
+					<div id="image-container">
+						<input type="file" id="imageInput" multiple accept="image/*">
+					  </div>
+					  <button class="form-button" id="concatenateBtn">Concatenate</button>
+					  <canvas id="outputCanvas" style="display: none;"></canvas>
+					  <div id="loading-spinner" style="display: none;">
+						<img src="loading.gif" alt="Loading...">
+					  </div>
+				</div>
 				<form class="input-container">
 					<h2>Preferences</h2>
 					<div class="formgroup">
@@ -39,6 +50,7 @@
 						<input id="sort-qualifications" name="sort-qualifications" type="checkbox">
 						<label for ="filter">Qualifications by Newest</label>
 					</div>
+					
 				</form>
 			</div>
 			<div class="inner-container">
@@ -54,14 +66,8 @@
 				<button class="form-button" id="saveRulesBtn">Save Rules</button>
 			</div>
 		</div>
-		<div id="image-container">
-			<input type="file" id="imageInput" multiple accept="image/*" onchange="handleImageChange()">
-		  </div>
-		  <button id="concatenateBtn">Concatenate</button>
-		  <canvas id="outputCanvas" style="display: none;"></canvas>
-		  <div id="loading-spinner" style="display: none;">
-			<img src="loading.gif" alt="Loading...">
-		  </div>
+		
+		
 		<script src="../scripts/Stopwatch.js"></script>
 		<script src="../scripts/Storage.js"></script>
 		<script src="../scripts/popup.js"></script>
