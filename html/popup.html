@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Extension Preferences</title>
-    <link rel="stylesheet" href="popup.css"> 
-</head>
-<body>
-    <div class="container">
-        <button class="button" id="move"> Highlight Rules </button>
-        <div class="inner-container">
-            <div class="timer">
-                <p id="display">00:00:00</p>
-                <div class="buttons">
-                    <button id="toggleBtn">Start</button>
-                    <button id="resetBtn">Reset</button>
-                </div>
-            </div>
-            <form class="input-container"></form>
-                <div class="formgroup">
-                    <h2>Preferences</h2>
-                    <label for="shortcut">Skip Task Key Binds </label>
-                    <input name="shorcut" type="text" id="shortcutDisplay" value="CTRL + /" readonly>
-                    <button class="form-button"id="resetShortcut">Reset Shortcut</button>
-        
-                </div>
-                <div class="formgroup">
-                    <input id="sort-pay"name="filter" type="checkbox">
-                    <label for ="filter">Sort Projects By Pay Rate</label>
-                    
-                </div>
-                <div class="formgroup">
-            <input id="stopWatchOverlay"name="stopwatch" type="checkbox">
-            <label for ="stopwatch">StopWatchOverlay</label>
-            
-        </div>
-        <div class="formgroup">
-                    <input id="darkMode"name="darkMode" type="checkbox">
-                    <label for ="darkMode">Enable DarkMode</label>
-                    
-                </div>
-            </form>
-            
-        </div>
-        <div class="inner-container">
-            <h2>Highlighting Rules</h2>
-        <table id="rulesTable">
-        <tr>
-            <th>Match Phrase (Regex)</th>
-            <th>Color</th>
-            <th>Delete</th>
-        </tr>
-        </table>
-        <button class="form-button" id="addRuleBtn">Add Rule</button>
-        <button class="form-button" id="saveRulesBtn">Save Rules</button>
-        </div>
-        
-        
-        
-    </div>
-    <script src="../scripts/Stopwatch.js"></script>
-    <script src="../scripts/Storage.js"></script>
-    <script src="../scripts/popup.js"></script>
-</body>
+	<head>
+		<title>Extension Preferences</title>
+		<link rel="stylesheet" href="popup.css"> 
+	</head>
+	<body>
+		<div class="container">
+			<button class="button" id="move">Highlight Rules</button>
+			<div class="inner-container">
+				<div class="timer">
+					<p id="display">00:00:00</p>
+					<div class="buttons">
+						<button id="toggleBtn">Start</button>
+						<button id="resetBtn">Reset</button>
+					</div>
+				</div>
+				<form class="input-container">
+					<h2>Preferences</h2>
+					<div class="formgroup">
+						<label for="shortcut">Skip Task Key Binds</label>
+						<input name="shorcut" type="text" id="shortcutDisplay" value="CTRL + /" readonly>
+						<button class="form-button"id="resetShortcut">Reset Shortcut</button>
+					</div>
+					<div class="formgroup">
+						<input id="stopWatchOverlay"name="stopwatch" type="checkbox">
+						<label for ="stopwatch">StopWatch Overlay</label>
+					</div>
+					<div class="formgroup">
+						<input id="darkMode"name="darkMode" type="checkbox">
+						<label for ="darkMode">Enable DarkMode</label>
+					</div>
+					<h2>Sorting</h2>
+					<div class="formgroup">
+						<input id="sort-pay" name="filter" type="checkbox">
+						<label for ="filter">Sort Projects By Pay Rate</label>
+					</div>
+					<div class="formgroup">
+						<input id="sort-qualifications" name="sort-qualifications" type="checkbox">
+						<label for ="filter">Sort Qualifications by Newest</label>
+					</div>
+				</form>
+			</div>
+			<div class="inner-container">
+				<h2>Highlighting Rules</h2>
+				<table id="rulesTable">
+					<tr>
+						<th>Match Phrase (Regex)</th>
+						<th>Color</th>
+						<th>Delete</th>
+					</tr>
+				</table>
+				<button class="form-button" id="addRuleBtn">Add Rule</button>
+				<button class="form-button" id="saveRulesBtn">Save Rules</button>
+			</div>
+		</div>
+		<script src="../scripts/Stopwatch.js"></script>
+		<script src="../scripts/Storage.js"></script>
+		<script src="../scripts/popup.js"></script>
+	</body>
 </html>
