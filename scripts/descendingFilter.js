@@ -14,6 +14,7 @@ function makeSanitizer(baseFunction) {
     return 0;
   }
 }
+
 //Issue #11
 function sortTable(table, sortColumnIndex, sanitizer = ((value) => value.innerText), descending = true) {
   const compareFn = descending ? ((a, b) => b.value - a.value) : ((a, b) => a.value - b.value);
@@ -46,7 +47,6 @@ function storageGetFunction(options, callback, fallbackDefaults = new Array(opti
     const optionObject = Object.fromEntries(options.map((key, index) => [key, fallbackDefaults[index]]));
     callback(optionObject);
   }
- 
 }
 
 /* Sum up all integer values in a table column by index */
@@ -87,9 +87,15 @@ const sanitizer_Tasks = makeSanitizer((element) => {
 /*   "MMM DD"  -->  ###   (Days from start of year) */
 const sanitizer_Created = makeSanitizer((element) => {
   const [month, day] = element.innerText.split(' ');
-  const monthIndex = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].indexOf(month.toUpperCase());
+  const monthArray = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const monthIndex = monthArray.indexOf(month.toUpperCase());
   const daysPriorToStartOfMonth = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334][monthIndex] || 0;
-  return daysPriorToStartOfMonth + Number.parseInt(day);
+  const dayOfYear = daysPriorToStartOfMonth + Number.parseInt(day);
+  const today = new Date();
+  if (today.getMonth() < monthIndex || (today.getMonth() === monthIndex && today.getDate() < Number.parseInt(day))) {
+	  return dayOfYear - 365;
+  }
+  return dayOfYear;
 });
 
 /* Determines if the item is pinned via className */
