@@ -5,7 +5,8 @@
   "description": "Skip tasks and copy response code easier. Automatically sort tasks by pay.",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "downloads"
   ],
   "action": {
     "default_popup": "./html/popup.html",
