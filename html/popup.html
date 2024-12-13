@@ -38,10 +38,12 @@
 						<input class="file" type="file" name="image" id="imageInput" multiple accept="image/*">
 					  </button>
 					  
-					<div id="image-container">
-					  </div>
 					  
-					  <button class="button" id="concatenateBtn">Concatenate</button>
+						<div id="image-container">
+					  	</div>
+						  <button class="button button-success" id="concatenateBtn">Concatenate</button>
+					  
+					 
 					  <canvas id="outputCanvas" style="display: none;"></canvas>
 					  <div id="loading-spinner" style="display: none;">
 						<img src="loading.gif" alt="Loading...">
@@ -52,7 +54,7 @@
 					<div class="formgroup">
 						<label for="shortcut">Skip Task Key Binds</label>
 						<input name="shorcut" type="text" id="shortcutDisplay" value="CTRL + /" readonly>
-						<button class="button button-reset"id="resetShortcut">Reset Shortcut</button>
+						<button class="button button-warning"id="resetShortcut">Reset Shortcut</button>
 					</div>
 					<div class="formgroup">
 						<input id="stopWatchOverlay"name="stopwatch" type="checkbox">
@@ -83,8 +85,11 @@
 						<th>Delete</th>
 					</tr>
 				</table>
-				<button class="form-button" id="addRuleBtn">Add Rule</button>
-				<button class="form-button" id="saveRulesBtn">Save Rules</button>
+				<div class="flex">
+					<button class="button" id="addRuleBtn">Add Rule</button>
+					<button class="button button-success" id="saveRulesBtn">Save Rules</button>
+				</div>
+				
 			</div>
 		</div>
 		
