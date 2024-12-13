@@ -1,4 +1,11 @@
-
+:root{
+  --primary:#2088f7;
+  --primary-hover:#3498db;
+  --warning:rgb(196, 54, 54);
+  --warning-hover:rgb(238, 122, 122);
+  --success:rgb(76, 177, 37);
+  --success-hover:rgb(88, 214, 37);
+}
 
 
 #popup-container {
@@ -30,7 +37,7 @@ input{
     display: inline-block;
     padding: 5px 8px;
     border: none;
-    background-color: #3498db;
+    background-color: var(--primary);
     color: #fff;
     text-align: center;
     text-decoration: none;
@@ -41,7 +48,7 @@ input{
 }
 
 .form-button:hover {
-    background-color: #2980b9;
+    background-color: var(--primary-hover)
 }
 .timer {
     margin: 20px auto;
@@ -92,7 +99,8 @@ input{
     flex: 1;
     /* width:250px; */         /* Makes each inner container take up equal space */
     background-color: white;  /* Background color for the content area */
-    padding: 20px;   /* Optional: Padding for content */
+    padding: 10px;
+    margin-right:5px;   /* Optional: Padding for content */
     /* overflow-x: hidden; */
   }
   #move{
@@ -104,7 +112,7 @@ input{
     background:none;
     /* font-size: 2rem; */
   }
-  #move:hover, #move-back:hover{
+  #move:hover{
    background:#ddd;
   }
 
@@ -116,34 +124,36 @@ input{
   position: relative;
   justify-content: center;
   align-items: center;
+  padding: .2em 1em;
+  margin-top:.3rem;
   flex:1;
   font-size: 1em;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  background-color: var(--primary);
   color: #fff;
   cursor: pointer;
-}
-/* timer buttons */
-.button-start, .button-reset{
-  flex:1;
-  padding: 10px 20px;
-  /* color: */
-}
-/* image concatination file input */
-.image-button{
- 
-  background-color: #007bff;
-  color: #fff;
-  border-style: none;
-  padding: .2em 1em;
-  border-radius: 0.5em;
   overflow: hidden;
   z-index: 1;
   box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
   transition: all 250ms;
   cursor: pointer;
 }
+.button-lg{
+  padding:.5rem 2rem;
+}
+/* timer buttons */
+.button-success{
+  background-color:var(--success)
+}
+/* /* overide color for reset */
+.button-warning{
+  background-color: var(--warning);
+}
+/* image concatination file input */
+
+
+/* custom styles for fancy image input */
   .image-button input[type="file"] {
     position: absolute;
     width: 100%;
@@ -155,20 +165,28 @@ input{
     margin-right: 1em;
     cursor: pointer;
   }
-  .image-button::before {
+  /* all button animations */
+  .button::before {
     content: "";
     position: absolute;
     height: 100%;
     width: 0;
     border-radius: 0.5em;
-    background-color: #2088f7;
+    background-color: var(--primary-hover);
     z-index: -1;
     transition: all 350ms;
     cursor: pointer;
   }
-  .image-button:hover::before {
-    width: 100%;
+  .button-warning::before{
+    background-color:var(--warning-hover)
   }
+  .button-success::before{
+    background-color:var(--success-hover)
+  }
+.button:hover::before{
+  width: 100%;
+}
+
   
 
   #image-container {
@@ -220,7 +238,7 @@ input{
 
 /* Delete button hover effect */
 .thumbnail button:hover {
-  background-color: rgba(255, 0, 0, 1); /* Full opacity on hover for clearer visibility */
+  background-color: var(--primary); /* Full opacity on hover for clearer visibility */
   transform: scale(1.1); /* Slight enlargement on hover */
   cursor: pointer;
 }
@@ -229,7 +247,7 @@ input{
     display:none;
     padding: 0.5em 1em;
     border-radius: 5px;
-    background-color: rgb(76, 177, 37);
+    background-color: var(--success);
     color: white;
     border: none;
     cursor: pointer;
@@ -246,9 +264,6 @@ input{
   #loading-spinner img {
     width: 50px;
     height: 50px;
-  }
-  #resetShortcut{
-    background-color:rgb(207, 86, 86)
   }
       
   Canvas {
