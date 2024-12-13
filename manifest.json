@@ -9,7 +9,7 @@
     "downloads"
   ],
   "action": {
-    "default_popup": "./html/popup.html",
+    "default_popup": "./public/popup.html",
     "default_icon": {
       "128": "./Images/icon128.png"
     }
