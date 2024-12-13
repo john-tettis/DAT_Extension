@@ -3,6 +3,8 @@ let selectedImages = [];
 
 // Select the file input element from the DOM
 const fileInput = document.getElementById('imageInput');
+//submit button
+const concatenateBtn = document.getElementById('concatenateBtn');
 
 // Function to handle the image change event when users select new images
 function handleImageChange() {
@@ -25,6 +27,10 @@ function handleImageChange() {
       deleteBtn.textContent = 'X'; // Set the button text to 'X'
       deleteBtn.addEventListener('click', () => {
         selectedImages = selectedImages.filter((i) => i !== img); // Remove the image from the selectedImages array
+        //hide concat button if no images selected
+        if(selectedImages.length === 0){
+          concatenateBtn.style.display="none"
+        }
         thumbnail.remove(); // Remove the thumbnail element from the DOM
       });
       thumbnail.appendChild(deleteBtn); // Append the delete button to the thumbnail
@@ -35,6 +41,8 @@ function handleImageChange() {
 
     img.src = URL.createObjectURL(file); // Create a temporary URL for the image file to display it
   }
+  //make concat button visible when files are added!
+  concatenateBtn.style.display="block"
 }
 
 // Add an event listener to the file input to handle image selection
@@ -109,7 +117,9 @@ function loadImage(file) {
     reader.readAsDataURL(file); // Read the file as a data URL
   });
 }
-const concatenateBtn = document.getElementById('concatenateBtn');
+
+
+//listener for submission
 concatenateBtn.addEventListener('click', async () => {
   if (selectedImages.length === 0) {
     alert('Please upload at least one image.'); // Alert if no images are selected
@@ -121,5 +131,7 @@ concatenateBtn.addEventListener('click', async () => {
 
   // Clear the selected images and remove thumbnails from the DOM after download
   selectedImages = [];
+  //hide submit button again :)
+  concatenateBtn.style.display="none"
   document.getElementById('image-container').innerHTML = ''; // Clear the image container
 });
