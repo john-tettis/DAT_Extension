@@ -94,21 +94,7 @@ function downloadImage(dataUrl) {
   document.body.removeChild(downloadLink); // Remove the link element from the DOM after the download
 }
 
-// Add event listener for the concatenate button to handle image merging and downloading
-const concatenateBtn = document.getElementById('concatenateBtn');
-concatenateBtn.addEventListener('click', async () => {
-  if (selectedImages.length === 0) {
-    alert('Please upload at least one image.'); // Alert if no images are selected
-    return;
-  }
 
-  const combinedImage = combineImages(selectedImages); // Combine the images into one
-  downloadImage(combinedImage); // Download the combined image
-
-  // Clear the selected images and remove thumbnails from the DOM after download
-  selectedImages = [];
-  document.getElementById('image-container').innerHTML = ''; // Clear the image container
-});
 
 // Function to load an image from a file
 function loadImage(file) {
@@ -123,66 +109,17 @@ function loadImage(file) {
     reader.readAsDataURL(file); // Read the file as a data URL
   });
 }
-  // Get the total width and height of the collage
-  let totalWidth = 0;
-  let maxHeight = 0;
-  console.log('starting image concat')
-  imageURLs.forEach((url, index) => {
-    const img = new Image();
-    img.onload = () => {
-      totalWidth += img.naturalWidth;
-      if (img.naturalHeight > maxHeight) {
-        maxHeight = img.naturalHeight;
-      }
-
-      // Check if all images are loaded, then draw on canvas
-      if (index === imageURLs.length - 1) {
-        canvas.width = totalWidth;
-        canvas.height = maxHeight;
-        let currentX = 0;
-        imageURLs.forEach((url) => {
-          const img = new Image();
-          img.onload = () => {
-            ctx.drawImage(img, currentX, 0, img.naturalWidth, img.naturalHeight);
-            currentX += img.naturalWidth;
-            // Remove image URL from memory
-            URL.revokeObjectURL(url);
-          };
-          img.src = url;
-        });
-      }
-    };
-    img.src = url;
-  });
-  console.log("finished concat")
-}
-
-// Function to handle the concatenation and download
-async function handleConcatenation() {
-  try {
-    const spinner = document.getElementById('loading-spinner')
-    spinner.style.display = 'block';  // Show the spinner
-    const imageURLs = await loadImages(selectedImages);
-    drawImagesOnCanvas(imageURLs);
-
-    const canvas = document.getElementById('outputCanvas');
-    canvas.style.display='block'
-    const imageURL = canvas.toDataURL('image/png');
-    console.log(imageURL)
-    const downloadLink = document.createElement('a');
-    downloadLink.href = imageURL;
-    downloadLink.setAttribute('download', 'concatenated_image.png');
-    document.body.appendChild(downloadLink);
-    console.log('clicking download')
-    downloadLink.click();
-    canvas.style.display='none'
-    spinner.style.display = 'none';  // Show the spinner
-    // Remove the link after downloading
-    document.body.removeChild(downloadLink); 
-  } catch (error) { 
-    console.error('Error occurred:', error);
+const concatenateBtn = document.getElementById('concatenateBtn');
+concatenateBtn.addEventListener('click', async () => {
+  if (selectedImages.length === 0) {
+    alert('Please upload at least one image.'); // Alert if no images are selected
+    return;
   }
-}
 
-const concatenateBtn = document.getElementById('concatenateBtn');  
-concatenateBtn.addEventListener('click', handleConcatenation);
+  const combinedImage = combineImages(selectedImages); // Combine the images into one
+  downloadImage(combinedImage); // Download the combined image
+
+  // Clear the selected images and remove thumbnails from the DOM after download
+  selectedImages = [];
+  document.getElementById('image-container').innerHTML = ''; // Clear the image container
+});
