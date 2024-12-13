@@ -55,7 +55,7 @@ input{
     padding: 20px;
     border: 2px solid #ccc;
     border-radius: 5px;
-    max-width: 300px;
+    width:180px;
     background-color: #f9f9f9;
 }
 
@@ -91,7 +91,11 @@ input{
     max-height: 600px;
   }
   .image-concat{
+    position:relative;
     width:200px;
+    display:flex;
+    flex-direction: column;
+    width:100%;
   }
 
   
@@ -124,9 +128,9 @@ input{
   position: relative;
   justify-content: center;
   align-items: center;
-  padding: .2em 1em;
+  padding: .4em 1em;
   margin-top:.3rem;
-  flex:1;
+  /* flex:1; */
   font-size: 1em;
   border: none;
   border-radius: 5px;
@@ -141,6 +145,7 @@ input{
 }
 .button-lg{
   padding:.5rem 2rem;
+  width:45%;
 }
 /* timer buttons */
 .button-success{
@@ -242,17 +247,11 @@ input{
   transform: scale(1.1); /* Slight enlargement on hover */
   cursor: pointer;
 }
-
+/* hide concat button by default */
   #concatenateBtn {
     display:none;
-    padding: 0.5em 1em;
-    border-radius: 5px;
-    background-color: var(--success);
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+  } 
+ 
   
   #loading-spinner {
     display: flex;
@@ -270,3 +269,10 @@ input{
     display: block;
     margin-top: 10px;
   } 
+
+  .flex{
+    display:flex;
+    flex-direction: row;
+    gap:1rem;
+    justify-content: start;
+  }
