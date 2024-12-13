@@ -20,6 +20,7 @@ input{
 .formgroup{
     margin-top: .5rem;
     background: rgba(0,0,0,0);
+    
 }
 .form-button{
     margin-top: .2rem;
@@ -33,6 +34,7 @@ input{
     border-radius: 5px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .form-button:hover {
@@ -52,9 +54,9 @@ input{
 }
 .buttons{
     display:flex;
+    justify-content: space-between;
 }
 .buttons button {
-    margin: 5px;
     padding: 10px 20px;
     font-size: 1em;
     border: none;
@@ -132,6 +134,7 @@ input{
     z-index: 1;
     box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
     transition: all 250ms;
+    cursor: pointer;
   }
   .container-btn-file input[type="file"] {
     position: absolute;
@@ -142,6 +145,7 @@ input{
   }
   .container-btn-file > svg {
     margin-right: 1em;
+    cursor: pointer;
   }
   .container-btn-file::before {
     content: "";
@@ -152,6 +156,7 @@ input{
     background-color: #2088f7;
     z-index: -1;
     transition: all 350ms;
+    cursor: pointer;
   }
   .container-btn-file:hover::before {
     width: 100%;
@@ -209,12 +214,14 @@ input{
 .thumbnail button:hover {
   background-color: rgba(255, 0, 0, 1); /* Full opacity on hover for clearer visibility */
   transform: scale(1.1); /* Slight enlargement on hover */
+  cursor: pointer;
 }
 
   #concatenateBtn {
+    display:none;
     padding: 0.5em 1em;
     border-radius: 5px;
-    background-color: lightblue;
+    background-color: rgb(76, 177, 37);
     color: white;
     border: none;
     cursor: pointer;
@@ -231,6 +238,9 @@ input{
   #loading-spinner img {
     width: 50px;
     height: 50px;
+  }
+  #resetShortcut{
+    background-color:rgb(207, 86, 86)
   }
       
   Canvas {
