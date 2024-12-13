@@ -274,5 +274,6 @@ input{
     display:flex;
     flex-direction: row;
     gap:1rem;
+    padding-left:5px;
     justify-content: start;
   }
