@@ -245,3 +245,4 @@ changePage.addEventListener('click', () => {
     isHomePage = !isHomePage;
 	return false;
 });
+

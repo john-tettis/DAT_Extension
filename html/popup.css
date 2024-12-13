@@ -57,6 +57,7 @@ input{
     justify-content: space-between;
 }
 .buttons button {
+    width:45%;
     padding: 10px 20px;
     font-size: 1em;
     border: none;
