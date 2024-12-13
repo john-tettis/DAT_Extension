@@ -240,7 +240,7 @@ changePage.addEventListener('click', () => {
         //     container.style.width='250px';
         // },400);
         animatePageChange(container, 0, 250);
-        changePage.innerText = 'Highlight Rules';
+        changePage.innerText = 'Rules';
     }
     isHomePage = !isHomePage;
 	return false;
