@@ -250,7 +250,7 @@ changePage.addEventListener('click', () => {
         // setTimeout(() => {
         //     container.style.width='250px';
         // },400);
-        animatePageChange(container, 0, 260);
+        animatePageChange(container, 0, 250);
         changePage.innerText = 'Rules';
     }
     isHomePage = !isHomePage;
