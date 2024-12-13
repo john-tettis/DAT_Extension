@@ -43,7 +43,6 @@ function deleteRuleRow(event) {
 
 // Function to populate the table with rules
 function populateColorRulesTable(rules) {
-    const table = document.getElementById("rulesTable");
 	const ruleCount = rules.length;
 	for (let index = 0; index < ruleCount; index++) {
 		const rule = rules[index];
