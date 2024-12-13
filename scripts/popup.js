@@ -125,6 +125,17 @@ function toggleDarkMode(bool) {
         chrome.tabs.sendMessage(tabs[0].id, darkModeStatus);
     });
 }
+function updateTimerToggle(){
+    const timerToggle = document.getElementById('toggleBtn');
+    if(stopwatch.isRunning){
+        timerToggle.innerText ='Pause' 
+        timerToggle.classList.remove("button-success")
+    }
+    else{
+        timerToggle.innerText ='Start' 
+        timerToggle.classList.add("button-success")
+    }
+}
 
 function updateTime() {
     display.innerText = stopwatch.formattedTime();
@@ -144,15 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const stopWatchOverlay = document.getElementById('stopWatchOverlay');
     const timerReset= document.getElementById('resetBtn');
     const timerToggle = document.getElementById('toggleBtn');
-    timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start';
+    updateTimerToggle()
     timerToggle.addEventListener('click', () => {
         stopwatch.toggle();
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start';
+        updateTimerToggle()
 		return false;
     });
     timerReset.addEventListener('click', () => {
         stopwatch.reset();
-        timerToggle.innerText = stopwatch.isRunning ? 'Pause' : 'Start';
+        updateTimerToggle()
 		return false;
     });
     // Retreive storage data for form info
@@ -232,14 +243,14 @@ changePage.addEventListener('click', () => {
         // setTimeout(() => {
         //     container.style.width = '350px';
         // }, 400);
-        animatePageChange(container, 250, 350);
+        animatePageChange(container, 260, 350);
         changePage.innerText = 'Return';
     } else {
         // container.style.right = '0';
         // setTimeout(() => {
         //     container.style.width='250px';
         // },400);
-        animatePageChange(container, 0, 250);
+        animatePageChange(container, 0, 260);
         changePage.innerText = 'Rules';
     }
     isHomePage = !isHomePage;
