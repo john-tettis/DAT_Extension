@@ -1,3 +1,6 @@
+
+
+
 #popup-container {
     width: 300px;
     padding: 20px;
@@ -50,25 +53,13 @@ input{
 }
 
 #display {
-    font-size: 2em;
+    font-size: 2.6em;
+    margin:.5rem 0 .5rem 0;
 }
-.buttons{
+.timer-control{
     display:flex;
     justify-content: space-between;
-}
-.buttons button {
-    width:45%;
-    padding: 10px 20px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-}
-
-.buttons button:hover {
-    background-color: #0056b3;
+    gap:5px;
 }
 
 /* Styling for Colour Rules Table */
@@ -118,37 +109,53 @@ input{
   }
 
 
-  /* Image Concatination */
-
-  /* image input styling */
-  .container-btn-file {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    background-color: #007bff;
-    color: #fff;
-    border-style: none;
-    padding: .2em 1em;
-    border-radius: 0.5em;
-    overflow: hidden;
-    z-index: 1;
-    box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
-    transition: all 250ms;
-    cursor: pointer;
-  }
-  .container-btn-file input[type="file"] {
+/* Buttons*/
+/* basis for all buttons */
+.button{
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex:1;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+/* timer buttons */
+.button-start, .button-reset{
+  flex:1;
+  padding: 10px 20px;
+  /* color: */
+}
+/* image concatination file input */
+.image-button{
+ 
+  background-color: #007bff;
+  color: #fff;
+  border-style: none;
+  padding: .2em 1em;
+  border-radius: 0.5em;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
+  transition: all 250ms;
+  cursor: pointer;
+}
+  .image-button input[type="file"] {
     position: absolute;
     width: 100%;
     height: 100%;
     opacity: 0;
     cursor: pointer;
   }
-  .container-btn-file > svg {
+  .image-button > svg {
     margin-right: 1em;
     cursor: pointer;
   }
-  .container-btn-file::before {
+  .image-button::before {
     content: "";
     position: absolute;
     height: 100%;
@@ -159,7 +166,7 @@ input{
     transition: all 350ms;
     cursor: pointer;
   }
-  .container-btn-file:hover::before {
+  .image-button:hover::before {
     width: 100%;
   }
   
