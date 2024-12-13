@@ -55,7 +55,7 @@ function drawImagesOnCanvas(imageURLs) {
   // Get the total width and height of the collage
   let totalWidth = 0;
   let maxHeight = 0;
-
+  console.log('starting image concat')
   imageURLs.forEach((url, index) => {
     const img = new Image();
     img.onload = () => {
@@ -83,6 +83,7 @@ function drawImagesOnCanvas(imageURLs) {
     };
     img.src = url;
   });
+  console.log("finished concat")
 }
 
 // Function to handle the concatenation and download
@@ -94,12 +95,16 @@ async function handleConcatenation() {
     drawImagesOnCanvas(imageURLs);
 
     const canvas = document.getElementById('outputCanvas');
+    canvas.style.display='block'
     const imageURL = canvas.toDataURL('image/png');
+    console.log(imageURL)
     const downloadLink = document.createElement('a');
     downloadLink.href = imageURL;
     downloadLink.setAttribute('download', 'concatenated_image.png');
     document.body.appendChild(downloadLink);
+    console.log('clicking download')
     downloadLink.click();
+    canvas.style.display='none'
     spinner.style.display = 'none';  // Show the spinner
     // Remove the link after downloading
     document.body.removeChild(downloadLink); 
