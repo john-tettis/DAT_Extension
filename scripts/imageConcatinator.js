@@ -42,7 +42,7 @@ function handleImageChange() {
     img.src = URL.createObjectURL(file); // Create a temporary URL for the image file to display it
   }
   //make concat button visible when files are added!
-  concatenateBtn.style.display="block"
+  concatenateBtn.style.display="flex"
 }
 
 // Add an event listener to the file input to handle image selection
