@@ -11,8 +11,9 @@ Welcome to the DAT Extension repository! This Chrome extension enhances your wor
 1. **Download ZIP File:**
    - Click on the "Code" button and select "Download ZIP."
    - Extract the file onto your system in a directory of your choice
+2. **You can also clone the repo to make updating much easier with a**  `git pull` 
 
-### Loading the Extension into Chrome
+#### Loading the Extension into Chrome
 
 1. Open Google Chrome browser on your computer.
 
@@ -29,6 +30,8 @@ Welcome to the DAT Extension repository! This Chrome extension enhances your wor
 
 5. **Confirm Extension Loading:**
    - The extension should now be loaded into chrome!
+  
+ ###  Keep in mind you will have to repeat this process each time you want to receive the newest update !
 
 ## Support
 
