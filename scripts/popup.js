@@ -112,8 +112,9 @@ function stopRecording() {
 function toastSaveMessage(message) {
 	const container = document.querySelector('#saveRulesBtn').parentElement;
 	const element = document.createElement('p');
+    element.classList.add("toast-message")
 	element.innerText = message;
-	container.append(element);
+    container.insertAdjacentElement('afterend', element);
 	window.setTimeout(() => {
 		element.remove();
 	}, 2500);

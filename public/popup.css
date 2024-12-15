@@ -294,3 +294,6 @@ input{
     padding-left:5px;
     justify-content: start;
   }
+  .toast-message{
+    margin-left:5px;
+  }
