@@ -27,10 +27,24 @@ input{
     border-radius: 5px;
     /* margin-top: .2rem; */
 }
+.row{
+  display:flex;
+  flex-direction:row;
+  align-items:end;
+  gap:5px;
+}
+.col{
+  display:flex;
+  flex-direction:column;
+}
 .formgroup{
     margin-top: .5rem;
     background: rgba(0,0,0,0);
     
+}
+
+#shortcutDisplay{
+  padding: .4em 1em;
 }
 .form-button{
     margin-top: .2rem;
