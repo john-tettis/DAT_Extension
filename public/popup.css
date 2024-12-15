@@ -32,6 +32,8 @@ input{
   flex-direction:row;
   align-items:end;
   gap:5px;
+  width:100%
+
 }
 .col{
   display:flex;
@@ -45,6 +47,7 @@ input{
 
 #shortcutDisplay{
   padding: .4em 1em;
+  width:100px;
 }
 .form-button{
     margin-top: .2rem;
