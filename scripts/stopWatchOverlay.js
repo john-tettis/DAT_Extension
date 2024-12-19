@@ -1,124 +1,142 @@
 function stopWatchOverlay(){
-    //formats milliseconds into hour:min:sec
-    function formattedTime(milliseconds) {
+    // Formats milliseconds into hour:min:sec
+    function formatTime(milliseconds) {
         const seconds = Math.floor(milliseconds / 1000);
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
         const remainingSeconds = seconds % 60;
         const remainingMinutes = minutes % 60;
-
         return `${hours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
-    //timer HTML
-    const html = `
-    <div class="timer timer-ext">
-        <p id="display">00:00:00</p>
-        <div class="buttons">
-        </div>
-    </div>
-    `
-    //timer container
-    const container = document.createElement('div')
-    container.classList.add('stopwatch-container')
 
-
-    const styles = document.createElement('style')
-    // css for the timer element
-    styles.textContent = `
-        .stopwatch-container{
-            position: fixed;
-            right:10px;
-            top: 100px;
+    function updateTimer() {
+        let formattedTime = '';
+        if (stopwatch.isRunning) {
+            formattedTime = formatTime(stopwatch.startTime === 0 ? 0 : stopwatch.elapsedTime + (Date.now() - stopwatch.startTime));
+        } else {
+            formattedTime = formatTime(stopwatch.elapsedTime);
         }
+        // Throttle DOM updates to improve performance
+        if (display.innerText !== formattedTime) {
+            display.innerText = formattedTime;
+        }
+        window.requestAnimationFrame(updateTimer);
+    }
+
+    // Object to hold our Stopwatch data
+    const stopwatch = {
+        startTime: 0,
+        elapsedTime: 0,
+        isRunning: false
+    };
+
+    // Change from innerHTML to programati c construction; Will
+    // save trouble if ever published to an extension store.
+    const container = document.createElement('div');
+    container.classList.add('stopwatch-container');
+
+    const timerExt = document.createElement('div');
+    timerExt.classList.add('timer', 'timer-ext');
+    container.append(timerExt);
+
+    const display = document.createElement('p');
+    display.id = 'display';
+    display.innerText = '00:00:00';
+    timerExt.append(display);
+
+    const buttons = document.createElement('div');
+    buttons.classList.add('buttons');
+    timerExt.append(buttons);
+
+    document.body.append(container);
+
+    // Styling for the timer element
+    const styles = document.createElement('style');
+    styles.textContent = `
+        .stopwatch-container {
+            position: fixed;
+            right: 10px;
+            top: 100px;
+            transition: top 0.4s;
+        }
+
         .timer-ext{
             position: absolute;
-            padding:4px;
-            border-radius:5px;
+            padding: 4px;
+            border-radius: 5px;
             border: solid black 2px;
         }
+
         #display{
-            margin:0;
-            }
+            margin: 0;
+        }
     `;
-    //add logic to update time
-    //put the stopwatch display inside the container
-    container.innerHTML = html;
-    console.log(container);
-    document.body.appendChild(container);
-    document.body.appendChild(styles);
-    //displaty element
-    const display = document.getElementById('display')
+    document.head.append(styles);
 
+    //fetch initial stopwatch time
+    chrome.storage.local.get(['startTime', 'isRunning', 'elapsedTime'], (data) => {
+        const { elapsedTime, startTime, isRunning } = data;
+        stopwatch.elapsedTime = elapsedTime || stopwatch.elapsedTime;
+        stopwatch.startTime = startTime || stopwatch.startTime;
+        stopwatch.isRunning = isRunning || stopwatch.isRunning;
+        updateTimer();
+    });
 
-    //where we store our stopwatch data
-    let stopwatch = {
-        startTime:0,
-        elapsedTime:0,
-        isRunning:false
-    }
-
-
-//fetch initial stopwatch time
-chrome.storage.local.get(['startTime','isRunning', 'elapsedTime'],(data)=>{
-    const {elapsedTime,startTime, isRunning} = data;
-    console.log(data)
-    stopwatch = { 
-        elapsedTime: elapsedTime ? elapsedTime : stopwatch.elapsedTime,
-        startTime: startTime ? startTime : stopwatch.startTime,
-        isRunning: isRunning ? isRunning : stopwatch.isRunni
-     };
-    //  console.log(stopwatch)
-     function updateTimer(){
-        if(stopwatch.isRunning){
-            const time = formattedTime(stopwatch.startTime === 0 ? 0 : stopwatch.elapsedTime +(Date.now() - stopwatch.startTime))
-            display.textContent = time;
-            
-        }
-        else{
-            const time = formattedTime(stopwatch.elapsedTime)
-            display.textContent = time;
-        }
-        window.requestAnimationFrame(updateTimer)
-     }
-     updateTimer()
-
-    })
     // Add a listener to detect changes in chrome.storage.local
     chrome.storage.onChanged.addListener(function(changes, namespace) {
-        if(namespace == 'local'){
-            const {elapsedTime,startTime, isRunning} = changes
-            console.log(changes)
-            let newStopWatch = {
-                elapsedTime: elapsedTime ? elapsedTime.newValue : stopwatch.elapsedTime,
-                startTime: startTime ? startTime.newValue : stopwatch.startTime,
-                isRunning: isRunning ? isRunning.newValue : stopwatch.isRunning
-            };
-            stopwatch =newStopWatch
-            console.log(stopwatch)
+        if (namespace === 'local') {
+            const { elapsedTime, startTime, isRunning } = changes;
+            stopwatch.elapsedTime = elapsedTime ? elapsedTime.newValue : stopwatch.elapsedTime;
+            stopwatch.startTime = startTime ? startTime.newValue : stopwatch.startTime;
+            stopwatch.isRunning = isRunning ? isRunning.newValue : stopwatch.isRunning;
         }
     });
 
-    //event listener to make sure stopwatch does not go on top off navbar
+    // Height of navbar excluding padding
+    const navbarHeight = document.querySelector('.navbar').clientHeight;
+    const tableHeaderArray = [...document.querySelectorAll('.thead')];
+    // The height of the tallest table header
+    const tableHeaderHeight = tableHeaderArray.reduce((accumulator, element) => {
+        return Math.max(element.getBoundingClientRect().height, accumulator);
+    }, 0);
+    // Because the timer has no inherent height, we use the height of the first child
+    const timerHeight = container.firstChild.getBoundingClientRect().height;
+
     window.addEventListener('scroll', function() {
-        // var fixedDiv = document.getElementById('fixedDiv');
-        var navbar = document.querySelector('.navbar');
-        // console.log(navbar)
-        // console.log(window.scrollY,navbar.clientHeight, container.style.top)
-        
-        if (window.scrollY >= navbar.clientHeight) {
-        container.style.top = '50px';
+        if (window.scrollY < navbarHeight) {
+            container.style.top =  `${navbarHeight - window.scrollY + 50}px`;
         } else {
-        container.style.top =  `${navbar.clientHeight - window.scrollY + 50}px`;
+            // Same as before, but withe the y value of the timer
+            const timerY = container.firstChild.getBoundingClientRect().y;
+            // The y values of our table headers
+            const yValues = tableHeaderArray.map((element) => element.getBoundingClientRect().y);
+            const length = yValues.length;
+            const max = 10 + timerHeight + tableHeaderHeight;
+            for (let index = 0; index < length; index++) {
+                const y = yValues[index];
+                if (y < 1) {
+                    // Assume the header is stuck to the top, place the top value 10px below it.
+                    container.style.top =  `${tableHeaderHeight + timerHeight + 10}px`;
+                    continue;
+                }
+                // If the top of the header is below the bottom of the timer, skip it
+                if (y > timerY + timerHeight) continue;
+                // If the bottom of the header is above the top of the timer, skip it
+                if (y + tableHeaderHeight < timerY) continue;
+                // Position the timer below the header when covered
+                if (timerY < 10 + timerHeight + tableHeaderHeight) {
+                    container.style.top = `${y + tableHeaderHeight + timerHeight + 10}px`;
+                // Position the timer above the header when possible (Convenient fallback)
+                } else {
+                    container.style.top =  `${navbarHeight + timerHeight + 10}px`;
+                }
+            }
         }
     });
-
 }
 
-
-
-
-chrome.storage.sync.get(['stopWatchOverlay'],(res)=>{
-    if(res.stopWatchOverlay){
-        stopWatchOverlay()
+chrome.storage.sync.get(['stopWatchOverlay'], (response) => {
+    if (response.stopWatchOverlay) {
+        stopWatchOverlay();
     }
-})
+});
