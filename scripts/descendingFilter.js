@@ -116,12 +116,20 @@ const [qualificationsTable, projectsTable] = document.querySelectorAll('table');
 const expectedInterface = [
   qualificationsHeader.innerText.startsWith('Qualifications'),
   projectsHeader.innerText.startsWith('Projects'),
-  qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
-  projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
+  qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
+  projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
 ].every((test) => test === true);
 
 /* Throw an Error if it isn't */
 if (expectedInterface === false) {
+  // log each element for debugging //
+  //  console.log({
+  //   qualificationsHeader,
+  //    projectsHeader, 
+  //    qualificationsTable:qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''), 
+  //    projectsTable: projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('')
+  // });
+
   throw new RangeError('DAT: Interface outside expected parameters, There may have been a site update which changed the UI');
 }
 
