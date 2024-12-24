@@ -15,11 +15,19 @@ function makeSanitizer(baseFunction) {
   }
 }
 
-//Issue #11
+/**
+ * Sorts an HTML table based on the values in one or two columns.
+ * The three Array/ Tuple parameters must be the same length
+ * @param {HTMLTableElement} table - The HTML table element to be sorted.
+ * @param {number[]} sortColumnIndices - An array or tuple (maximum length 2) specifying the column indices to be used for sorting. The first element is the primary column, and the second element is the secondary column (optional).
+ * @param {Function[]} [sanitizers=[(value) => value.innerText]] - An array or tuple (maximum length 2) of functions to sanitize values in the respective columns before comparison. Each function should accept a table cell (td element) and return a sanitized value. Defaults to using the `innerText` of each cell.
+ * @param {boolean[]} [descending=[true, true]] - An array or tuple (maximum length 2) specifying the sort order for each column. `true` means descending order, and `false` means ascending order. Defaults to `[true, true]` for descending order for both columns.
+ */
+
 function sortTable(table, sortColumnIndices, sanitizers= [((value) => value.innerText)], descending = [true ,true]) {
 
   let simpleCompare =  descending[0] ? ((a, b) => b.primary - a.primary) : ((a, b) => a.primary - b.primary);
-  //this function is able to sort by one column or an additional second column. Implemented to enable
+  //this function is able to compare by one column or an additional second column. Implemented to enable
   //sorting by pay first, then by tasks.
    const compareFn = (a,b) =>{
        let comparison = simpleCompare(a,b)
