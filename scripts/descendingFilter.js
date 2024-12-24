@@ -16,17 +16,38 @@ function makeSanitizer(baseFunction) {
 }
 
 //Issue #11
-function sortTable(table, sortColumnIndex, sanitizer = ((value) => value.innerText), descending = true) {
-  const compareFn = descending ? ((a, b) => b.value - a.value) : ((a, b) => a.value - b.value);
+function sortTable(table, sortColumnIndices, sanitizers= [((value) => value.innerText)], descending = [true ,true]) {
+
+  let simpleCompare =  descending[0] ? ((a, b) => b.primary - a.primary) : ((a, b) => a.primary - b.primary);
+  //this function is able to sort by one column or an additional second column. Implemented to enable
+  //sorting by pay first, then by tasks.
+   const compareFn = (a,b) =>{
+       let comparison = simpleCompare(a,b)
+     //if their primary value is equal, and they both have secondary values to compare:
+       if(comparison === 0 && a.secondary && b.secondary){
+         //return the appropriate comparison between their two value
+         return descending[1] ? b.secondary - a.secondary : a.secondary - b.secondary;
+       }
+       //otherwise, if the primary comparison is non-zero, or if there is no secondary value, just return primary comparison
+       return comparison
+     }
   /* Get all tBody elements in the table as an array. iterate through each,
    * returning an array of rows, then flatten the result. I've seen tables in
    * other parts of the site with multiple tBodys.  This ia a just-in-case.
    */
   const allRows = [...table.tBodies].map((tBody) => [...tBody.rows]).flat();
-    /* an object with two keys, the sanitized "value" for sorting and the "row" element */
+
+
+    /* an object with three keys, the sanitized "primary" and  "secondary" for sorting and the "row" element */
   const workingArray = allRows.map((row) => {
-    const value = sanitizer(row.cells[sortColumnIndex]);
-    return { row, value };
+    //get our primary sorting value
+    const primary = sanitizers[0](row.cells[sortColumnIndices[0]]);
+    //get a secondary sorting value if available
+    const secondary = sanitizers[1]?.(row.cells[sortColumnIndices[1]]);
+    //return the row, its primary sorting value, and its secondary value or undefined
+    return {row, primary, secondary};
+
+
   });
   /* Sort the objects by value and return only the row element */
   const sortedRows = workingArray.sort(compareFn).map((object) => object.row);
@@ -37,6 +58,7 @@ function sortTable(table, sortColumnIndex, sanitizer = ((value) => value.innerTe
     tBody.appendChild(sortedRows[index]);
   }
 }
+
 
 /* Wrapper function to allow for easier testing regardless of API availability */
 function storageGetFunction(options, callback, fallbackDefaults = new Array(options.length).fill(true)) {
@@ -81,7 +103,7 @@ const sanitizer_Pay = makeSanitizer((element) => {
 
 /*   "####"  -->  ####   */
 const sanitizer_Tasks = makeSanitizer((element) => {
-  return Numnber.parseInt(element.innerText);
+  return Number.parseInt(element.innerText);
 });
 
 /*   "MMM DD"  -->  ###   (Days from start of year) */
@@ -165,9 +187,9 @@ qualificationsContainer.style.scrollbarColor = `${textColor} ${accentColor}`;
 
 storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
   if (sortPay) {
-    sortTable(projectsTable, 1, sanitizer_Pay);
+    sortTable(projectsTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
   }
-  if (sortQualifications || sortQualifications == undefined) {
-    sortTable(qualificationsTable, 3, sanitizer_Created);
+  if (sortQualifications || sortQualifications === undefined) {
+    sortTable(qualificationsTable, [3], [sanitizer_Created]);
   }
 }, [true, true]);
