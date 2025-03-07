@@ -5,8 +5,7 @@
   "description": "Skip tasks and copy response code easier. Automatically sort projects by pay, and qualifications by recent.",
   "permissions": [
     "activeTab",
-    "storage",
-    "downloads"
+    "storage"
   ],
   "action": {
     "default_popup": "./public/popup.html",
