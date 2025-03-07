@@ -56,12 +56,13 @@ function stopWatchOverlay(){
         .stopwatch-container {
             position: fixed;
             right: 10px;
-            top: 100px;
+            top: 60px;
             transition: top 0.4s;
+            background-color: white;
+            z-index:1000;
         }
 
         .timer-ext{
-            position: absolute;
             padding: 4px;
             border-radius: 5px;
             border: solid black 2px;
@@ -104,7 +105,7 @@ function stopWatchOverlay(){
 
     window.addEventListener('scroll', function() {
         if (window.scrollY < navbarHeight) {
-            container.style.top =  `${navbarHeight - window.scrollY + 50}px`;
+            container.style.top =  `${navbarHeight - window.scrollY + 10 }px`;
         } else {
             // Same as before, but withe the y value of the timer
             const timerY = container.firstChild.getBoundingClientRect().y;
@@ -116,7 +117,7 @@ function stopWatchOverlay(){
                 const y = yValues[index];
                 if (y < 1) {
                     // Assume the header is stuck to the top, place the top value 10px below it.
-                    container.style.top =  `${tableHeaderHeight + timerHeight + 10}px`;
+                    container.style.top =  `${tableHeaderHeight +  + 10}px`;
                     continue;
                 }
                 // If the top of the header is below the bottom of the timer, skip it
@@ -125,10 +126,10 @@ function stopWatchOverlay(){
                 if (y + tableHeaderHeight < timerY) continue;
                 // Position the timer below the header when covered
                 if (timerY < 10 + timerHeight + tableHeaderHeight) {
-                    container.style.top = `${y + tableHeaderHeight + timerHeight + 10}px`;
+                    container.style.top = `${y + tableHeaderHeight + 10}px`;
                 // Position the timer above the header when possible (Convenient fallback)
                 } else {
-                    container.style.top =  `${navbarHeight + timerHeight + 10}px`;
+                    container.style.top =  `${navbarHeight + 10}px`;
                 }
             }
         }
