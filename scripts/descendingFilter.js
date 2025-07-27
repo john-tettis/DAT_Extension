@@ -140,13 +140,13 @@ const sanitizer_Priority = makeSanitizer((element) => {
 
 function processCurrentTable() {
   console.log('[DAT] processCurrentTable called');
-  const headers = document.querySelectorAll('span.tw-inline-flex.tw-items-center.tw-font-medium');
+  const [QualHeader, ProjectHeader] = document.querySelectorAll('span.tw-inline-flex.tw-items-center.tw-font-medium');
   const table = document.querySelector('table');
-  console.log('[DAT] Found headers:', headers);
+  console.log('[DAT] Found headers:', QualHeader, ProjectHeader);
   console.log('[DAT] Found table:', table);
 
   // Remove any previously added task count spans
-  headers.forEach((h, i) => {
+  [QualHeader, ProjectHeader].forEach((h, i) => {
     const oldSpan = h.querySelector('span[data-dat-task-count]');
     if (oldSpan) {
       console.log(`[DAT] Removing old task count span from header[${i}]`);
@@ -218,24 +218,26 @@ function processCurrentTable() {
 console.log('[DAT] Initial processCurrentTable run');
 processCurrentTable();
 
+
+//capture the table tabs which
 // Set up MutationObserver to watch for table/header changes
 const mainContainer = document.querySelector('div.active-table').parentElement; // You may want to scope this to a more specific container if possible
 console.log('[DAT] Setting up MutationObserver on', mainContainer);
-const observer = new MutationObserver((mutationsList) => {
-  let shouldProcess = false;
-  for (const mutation of mutationsList) {
-    if (
-      Array.from(mutation.addedNodes).some(node => node.nodeName === 'TABLE' || (node.nodeType === 1 && node.matches && node.matches('span.tw-inline-flex.tw-items-center.tw-font-medium')))
-      || Array.from(mutation.removedNodes).some(node => node.nodeName === 'TABLE')
-    ) {
-      shouldProcess = true;
-      console.log('[DAT] MutationObserver detected relevant node change:', mutation);
-      break;
-    }
-  }
-  if (shouldProcess) {
-    processCurrentTable();
-  }
-});
-observer.observe(mainContainer, { childList: true, subtree: true });
+// const observer = new MutationObserver((mutationsList) => {
+//   let shouldProcess = false;
+//   for (const mutation of mutationsList) {
+//     if (
+//       Array.from(mutation.addedNodes).some(node => node.nodeName === 'TABLE' || (node.nodeType === 1 && node.matches && node.matches('span.tw-inline-flex.tw-items-center.tw-font-medium')))
+//       || Array.from(mutation.removedNodes).some(node => node.nodeName === 'TABLE')
+//     ) {
+//       shouldProcess = true;
+//       console.log('[DAT] MutationObserver detected relevant node change:', mutation);
+//       break;
+//     }
+//   }
+//   if (shouldProcess) {
+//     processCurrentTable();
+//   }
+// });
+// observer.observe(mainContainer, { childList: true, subtree: true });
 console.log('[DAT] MutationObserver is now observing');
