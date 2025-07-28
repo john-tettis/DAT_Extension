@@ -55,9 +55,14 @@ function stopWatchOverlay(){
     styles.textContent = `
         .stopwatch-container {
             position: fixed;
-            right: 10px;
-            top: 100px;
+            right: 60px;
+            top: 80px;
             transition: top 0.4s;
+            margin-right: 10px;
+            width:100px
+            height:50px;
+            display: inline-block;
+            z-index:100;
         }
 
         .timer-ext{
@@ -65,6 +70,8 @@ function stopWatchOverlay(){
             padding: 4px;
             border-radius: 5px;
             border: solid black 2px;
+            background:white;
+            cursor: pointer;
         }
 
         #display{
@@ -100,11 +107,11 @@ function stopWatchOverlay(){
         return Math.max(element.getBoundingClientRect().height, accumulator);
     }, 0);
     // Because the timer has no inherent height, we use the height of the first child
-    const timerHeight = container.firstChild.getBoundingClientRect().height;
-
+    // const timerHeight = container.firstChild.getBoundingClientRect().height;
+     const timerHeight = container.getBoundingClientRect().height;
     window.addEventListener('scroll', function() {
         if (window.scrollY < navbarHeight) {
-            container.style.top =  `${navbarHeight - window.scrollY + 50}px`;
+            container.style.top =  `${navbarHeight - window.scrollY + 10}px`;
         } else {
             // Same as before, but withe the y value of the timer
             const timerY = container.firstChild.getBoundingClientRect().y;
@@ -125,10 +132,10 @@ function stopWatchOverlay(){
                 if (y + tableHeaderHeight < timerY) continue;
                 // Position the timer below the header when covered
                 if (timerY < 10 + timerHeight + tableHeaderHeight) {
-                    container.style.top = `${y + tableHeaderHeight + timerHeight + 10}px`;
+                    container.style.top = `${y + tableHeaderHeight  + 10}px`;
                 // Position the timer above the header when possible (Convenient fallback)
                 } else {
-                    container.style.top =  `${navbarHeight + timerHeight + 10}px`;
+                    container.style.top = `10px`;
                 }
             }
         }
