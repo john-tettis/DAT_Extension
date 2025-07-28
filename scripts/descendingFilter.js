@@ -81,6 +81,7 @@ function storageGetFunction(options, callback, fallbackDefaults = new Array(opti
 
 /* Sum up all integer values in a table column by index */
 function sumTableColumn(table, columnIndex) {
+  console.log('[DAT] sumTableColumn called with table:', table, 'and columnIndex:', columnIndex);
   return [...table.rows]
     .map((row) => row.children[columnIndex])
     .reduce((accumulator, cell) => {
@@ -138,12 +139,31 @@ const sanitizer_Priority = makeSanitizer((element) => {
   return element.innerText.toUpperCase().indexOf('PRIORITY') > -1 ? 1 : 0;
 });
 
+/*
+non active header tab:
+tw-flex tw-gap-2 tw-rounded-t-lg tw-cursor-pointer tw-transition tw-px-8 tw-py-4 tw-mr-2 tw-bg-transparent tw-text-gray-500 hover:tw-bg-gray-100 tw-border-b tw-border-transparent
+
+active header tab:
+tw-flex tw-gap-2 tw-rounded-t-lg tw-cursor-pointer tw-transition tw-px-8 tw-py-4 tw-mr-2 tw-bg-white tw-shadow-sm tw-font-semibold tw-text-primary-default tw-border-x tw-border-t tw-border-b-0 tw-border-gray-200
+
+classes to find in active tab:  tw-bg-white tw-shadow-sm tw-font-semibold tw-text-primary-default tw-border-x tw-border-t tw-border-b-0 tw-border-gray-200
+
+*/
 function processCurrentTable() {
   console.log('[DAT] processCurrentTable called');
-  const [QualHeader, ProjectHeader] = document.querySelectorAll('span.tw-inline-flex.tw-items-center.tw-font-medium');
+  const [QualHeader, ProjectHeader, PayHeader] = document.querySelectorAll('span.tw-inline-flex.tw-items-center.tw-font-medium');
+  const activeHeader = document.querySelector('div.tw-flex.tw-gap-2.tw-rounded-t-lg.tw-cursor-pointer.tw-transition.tw-px-8.tw-py-4.tw-mr-2.tw-bg-white.tw-shadow-sm.tw-font-semibold.tw-text-primary-default.tw-border-x.tw-border-t.tw-border-b-0.tw-border-gray-200')
+  
+  console.log('[DAT] Found active header:', activeHeader);
+
   const table = document.querySelector('table');
-  console.log('[DAT] Found headers:', QualHeader, ProjectHeader);
+  console.log('[DAT] Found headers:', QualHeader, ProjectHeader, PayHeader);
   console.log('[DAT] Found table:', table);
+  
+  //determine which header is active so we can uses the correct sort options
+
+
+  
 
   // Remove any previously added task count spans
   [QualHeader, ProjectHeader].forEach((h, i) => {
@@ -159,36 +179,12 @@ function processCurrentTable() {
     return; // No table present, nothing to do
   }
 
-  let header = null;
-  let isQualifications = false;
-  let isProjects = false;
-  if (headers.length >= 2) {
-    const tableHeaderText = table.tHead.firstChild.textContent.split('Filter and sort options').join('');
-    console.log('[DAT] tableHeaderText:', tableHeaderText);
-    if (tableHeaderText === 'NamePayTasksCreatedPinHide') {
-      if (headers[0].innerText.startsWith('Qualifications')) {
-        header = headers[0];
-        isQualifications = true;
-        console.log('[DAT] Matched Qualifications header');
-      } else if (headers[1].innerText.startsWith('Projects')) {
-        header = headers[1];
-        isProjects = true;
-        console.log('[DAT] Matched Projects header');
-      } else {
-        console.log('[DAT] No matching header found for table');
-      }
-    } else {
-      console.log('[DAT] Table header text did not match expected value');
-    }
-  } else {
-    console.log('[DAT] Not enough headers found');
-  }
 
-  if (!header) {
-    console.log('[DAT] No header matched for the present table, returning');
-    return;
-  }
-
+  let header = activeHeader;
+  const isQualifications = activeHeader.innerText.startsWith('Qualifications');
+  const isProjects = activeHeader.innerText.startsWith('Projects');
+  console.log({isQualifications, isProjects,header,activeHeader})
+  
   // Add Task Counts to the Header
   const taskCount = sumTableColumn(table, 2);
   console.log('[DAT] Calculated taskCount:', taskCount);
@@ -219,25 +215,21 @@ console.log('[DAT] Initial processCurrentTable run');
 processCurrentTable();
 
 
-//capture the table tabs which
-// Set up MutationObserver to watch for table/header changes
-const mainContainer = document.querySelector('div.active-table').parentElement; // You may want to scope this to a more specific container if possible
-console.log('[DAT] Setting up MutationObserver on', mainContainer);
-// const observer = new MutationObserver((mutationsList) => {
-//   let shouldProcess = false;
-//   for (const mutation of mutationsList) {
-//     if (
-//       Array.from(mutation.addedNodes).some(node => node.nodeName === 'TABLE' || (node.nodeType === 1 && node.matches && node.matches('span.tw-inline-flex.tw-items-center.tw-font-medium')))
-//       || Array.from(mutation.removedNodes).some(node => node.nodeName === 'TABLE')
-//     ) {
-//       shouldProcess = true;
-//       console.log('[DAT] MutationObserver detected relevant node change:', mutation);
-//       break;
-//     }
-//   }
-//   if (shouldProcess) {
-//     processCurrentTable();
-//   }
+//capture the header container that holds the tab buttons
+const headerTabContainer = document.querySelector('div.tw-flex.tw-overflow-x-auto.md\\:tw-pl-4.tw-border-b.tw-border-gray-200.tw-bg-gray-50');
+
+// Set up a MutationObserver to watch for changes in the header container
+const observer = new MutationObserver((mutationsList, observer) => {
+  // You can add more sophisticated checks here if needed
+  // For now, just call processCurrentTable on any mutation
+  console.log("mutation observed_______________________________________")
+  processCurrentTable();
+});
+
+observer.observe(headerTabContainer, { childList: true, subtree: true, attributes: true });
+
+// Optionally, you can still listen for clicks to trigger the observer if needed
+// headerTabContainer.addEventListener('click', () => {
+//   // No need for setTimeout, observer will handle DOM changes
 // });
-// observer.observe(mainContainer, { childList: true, subtree: true });
-console.log('[DAT] MutationObserver is now observing');
+
