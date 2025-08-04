@@ -81,7 +81,7 @@ function storageGetFunction(options, callback, fallbackDefaults = new Array(opti
 
 /* Sum up all integer values in a table column by index */
 function sumTableColumn(table, columnIndex) {
-  console.log('[DAT] sumTableColumn called with table:', table, 'and columnIndex:', columnIndex);
+//   console.log('[DAT] sumTableColumn called with table:', table, 'and columnIndex:', columnIndex);
   return [...table.rows]
     .map((row) => row.children[columnIndex])
     .reduce((accumulator, cell) => {
@@ -150,83 +150,81 @@ classes to find in active tab:  tw-bg-white tw-shadow-sm tw-font-semibold tw-tex
 
 */
 function processCurrentTable() {
-  console.log('[DAT] processCurrentTable called');
-  const [QualHeader, ProjectHeader, PayHeader] = document.querySelectorAll('span.tw-inline-flex.tw-items-center.tw-font-medium');
-  const activeHeader = document.querySelector('div.tw-flex.tw-gap-2.tw-rounded-t-lg.tw-cursor-pointer.tw-transition.tw-px-8.tw-py-4.tw-mr-2.tw-bg-white.tw-shadow-sm.tw-font-semibold.tw-text-primary-default.tw-border-x.tw-border-t.tw-border-b-0.tw-border-gray-200')
   
-  console.log('[DAT] Found active header:', activeHeader);
+  const header = document.querySelector('div.tw-flex.tw-gap-2.tw-rounded-t-lg.tw-cursor-pointer.tw-transition.tw-px-8.tw-py-4.tw-mr-2.tw-bg-white.tw-shadow-sm.tw-font-semibold.tw-text-primary-default.tw-border-x.tw-border-t.tw-border-b-0.tw-border-gray-200')
+  
+  //console.log('[DAT] Found active header:', activeHeader);
 
   const table = document.querySelector('table');
-  console.log('[DAT] Found headers:', QualHeader, ProjectHeader, PayHeader);
-  console.log('[DAT] Found table:', table);
-  
-  //determine which header is active so we can uses the correct sort options
-
-
-  
-
-  // Remove any previously added task count spans
-  [QualHeader, ProjectHeader].forEach((h, i) => {
-    const oldSpan = h.querySelector('span[data-dat-task-count]');
-    if (oldSpan) {
-      console.log(`[DAT] Removing old task count span from header[${i}]`);
-      oldSpan.remove();
-    }
-  });
-
+  //console.log('[DAT] Found headers:', QualHeader, ProjectHeader, PayHeader);
+  //console.log('[DAT] Found table:', table);
   if (!table) {
     console.log('[DAT] No table found, returning early from processCurrentTable');
     return; // No table present, nothing to do
   }
 
+  
 
-  let header = activeHeader;
-  const isQualifications = activeHeader.innerText.startsWith('Qualifications');
-  const isProjects = activeHeader.innerText.startsWith('Projects');
-  console.log({isQualifications, isProjects,header,activeHeader})
+
+
+  const isQualifications = header.innerText.startsWith('Qualifications');
+  const isProjects = header.innerText.startsWith('Projects');
+  //console.log({isQualifications, isProjects,header,activeHeader})
+
+
   
   // Add Task Counts to the Header
   const taskCount = sumTableColumn(table, 2);
-  console.log('[DAT] Calculated taskCount:', taskCount);
-  const headerSpan = document.createElement('span');
+  //console.log('[DAT] Calculated taskCount:', taskCount);
+
+
+  //modify exisiting data span if it exists
+  let existingSpan = header.querySelector('span[data-dat-task-count]');
+  console.log('existingSpan', existingSpan)
+  if (!existingSpan) {
+    const headerSpan = document.createElement('span');
   headerSpan.style.fontSize = '65%';
   headerSpan.style.verticalAlign = '-15%';
-  headerSpan.innerText = ` with ${formatNumber(taskCount)} tasks`;
   headerSpan.setAttribute('data-dat-task-count', 'true');
+  //set reference to the new span
+  existingSpan = headerSpan;
   header.append(headerSpan);
-  console.log('[DAT] Appended task count span to header');
+  }
+  //whether we had an existing span or not, we have a reference to it now either way. this avoids duplicate code.
+  existingSpan.innerText = ` with ${formatNumber(taskCount)} tasks`;
+
+ 
+  //console.log('[DAT] Appended task count span to header');
 
   // Only sort the table that is present
   storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
-    console.log('[DAT] storageGetFunction callback:', { sortPay, sortQualifications, isProjects, isQualifications });
+    //console.log('[DAT] storageGetFunction callback:', { sortPay, sortQualifications, isProjects, isQualifications });
     if (isProjects && sortPay) {
-      console.log('[DAT] Sorting projects table by Pay and Tasks');
+      //console.log('[DAT] Sorting projects table by Pay and Tasks');
       sortTable(table, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
     }
     if (isQualifications && (sortQualifications || sortQualifications === undefined)) {
-      console.log('[DAT] Sorting qualifications table by Created');
+      //console.log('[DAT] Sorting qualifications table by Created');
       sortTable(table, [3], [sanitizer_Created]);
     }
   }, [true, true]);
 }
 
 // Initial run
-console.log('[DAT] Initial processCurrentTable run');
+//console.log('[DAT] Initial processCurrentTable run');
 processCurrentTable();
 
 
 //capture the header container that holds the tab buttons
 const headerTabContainer = document.querySelector('div.tw-flex.tw-overflow-x-auto.md\\:tw-pl-4.tw-border-b.tw-border-gray-200.tw-bg-gray-50');
-
 // Set up a MutationObserver to watch for changes in the header container
-const observer = new MutationObserver((mutationsList, observer) => {
-  // You can add more sophisticated checks here if needed
-  // For now, just call processCurrentTable on any mutation
-  console.log("mutation observed_______________________________________")
-  processCurrentTable();
-});
+const observer = new MutationObserver((mutationsList) => {
+    // console.log('[DAT] MutationObserver triggered with mutations:', mutationsList.length);
+        processCurrentTable()
+    // }
+  });
 
-observer.observe(headerTabContainer, { childList: true, subtree: true, attributes: true });
+observer.observe(headerTabContainer, { childList: false, subtree: true, attributes: true });
 
 // Optionally, you can still listen for clicks to trigger the observer if needed
 // headerTabContainer.addEventListener('click', () => {
