@@ -21,7 +21,7 @@ function highlightProjectRows(highlightRules) {
   projectRows.forEach(row => {
     const projectNameCell = row.querySelector('td:first-child a');
     const projectName = projectNameCell.textContent;
-
+    if(!highlightRules || highlightRules.length === 0) return;
     for (let rule of highlightRules) {
       if (isProjectNameMatch(projectName, rule.regex)) {
         row.style.backgroundColor = rule.color;
