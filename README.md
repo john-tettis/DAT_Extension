@@ -44,3 +44,5 @@ We welcome contributions to enhance the extension. Submit bug reports, feature r
 
 ---
 Thank you for using this extension!
+
+
