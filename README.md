@@ -11,7 +11,7 @@ Welcome to the DAT Extension repository! This Chrome extension enhances your wor
 1. **Download ZIP File:**
    - Click on the "Code" button and select "Download ZIP."
    - Extract the file onto your system in a directory of your choice
-2. **You can also clone the repo to make updating much easier with a**  `git pull` 
+2. **You can also clone the repo to make updating much easier with a**  `git clone` 
 
 #### Loading the Extension into Chrome
 
