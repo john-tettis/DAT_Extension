@@ -139,8 +139,21 @@ const sanitizer_Priority = makeSanitizer((element) => {
 });
 
 /* Section Header and Tables, Purposefully Excluding Report Time Section */
-const [qualificationsHeader, projectsHeader] = document.querySelectorAll('h3');
-const [qualificationsTable, projectsTable] = document.querySelectorAll('table');
+const headers = document.querySelectorAll('h3');
+const tables = document.querySelectorAll('table');
+
+const isProjectInProgress = headers[0].innerText.startsWith('In Progress');
+
+// Declare variables in outer scope so they're available throughout the script
+let qualificationsHeader, projectsHeader, qualificationsTable, projectsTable;
+
+if (isProjectInProgress) {
+  [qualificationsHeader, projectsHeader] = [headers[1], headers[2]];
+  [qualificationsTable, projectsTable] = [tables[1], tables[2]];
+} else {
+  [qualificationsHeader, projectsHeader] = [headers[0], headers[1]];
+  [qualificationsTable, projectsTable] = [tables[0], tables[1]];
+}
 
 /* Simple checks to ensure the UI is what we expect */
 const expectedInterface = [
