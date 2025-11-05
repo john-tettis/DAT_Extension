@@ -16,6 +16,7 @@ function isProjectNameMatch(projectName, key) {
 }
 
 function highlightProjectRows(highlightRules) {
+  if(highlightRules == null || highlightRules.length == 0) return;
   const projectRows = document.querySelectorAll('tbody tr');
 
   projectRows.forEach(row => {

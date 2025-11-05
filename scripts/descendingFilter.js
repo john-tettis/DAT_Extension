@@ -139,95 +139,79 @@ const sanitizer_Priority = makeSanitizer((element) => {
   return element.innerText.toUpperCase().indexOf('PRIORITY') > -1 ? 1 : 0;
 });
 
-/*
-non active header tab:
-tw-flex tw-gap-2 tw-rounded-t-lg tw-cursor-pointer tw-transition tw-px-8 tw-py-4 tw-mr-2 tw-bg-transparent tw-text-gray-500 hover:tw-bg-gray-100 tw-border-b tw-border-transparent
+/* Section Header and Tables, Purposefully Excluding Report Time Section */
+const headers = document.querySelectorAll('h3');
+const tables = document.querySelectorAll('table');
 
-active header tab:
-tw-flex tw-gap-2 tw-rounded-t-lg tw-cursor-pointer tw-transition tw-px-8 tw-py-4 tw-mr-2 tw-bg-white tw-shadow-sm tw-font-semibold tw-text-primary-default tw-border-x tw-border-t tw-border-b-0 tw-border-gray-200
+const isProjectInProgress = headers[0].innerText.startsWith('In Progress');
 
-classes to find in active tab:  tw-bg-white tw-shadow-sm tw-font-semibold tw-text-primary-default tw-border-x tw-border-t tw-border-b-0 tw-border-gray-200
+// Declare variables in outer scope so they're available throughout the script
+let qualificationsHeader, projectsHeader, qualificationsTable, projectsTable;
 
-*/
-function processCurrentTable() {
-  
-  const header = document.querySelector('div.tw-flex.tw-gap-2.tw-rounded-t-lg.tw-cursor-pointer.tw-transition.tw-px-8.tw-py-4.tw-mr-2.tw-bg-white.tw-shadow-sm.tw-font-semibold.tw-text-primary-default.tw-border-x.tw-border-t.tw-border-b-0.tw-border-gray-200')
-  
-  //console.log('[DAT] Found active header:', activeHeader);
-
-  const table = document.querySelector('table');
-  //console.log('[DAT] Found headers:', QualHeader, ProjectHeader, PayHeader);
-  //console.log('[DAT] Found table:', table);
-  if (!table) {
-    console.log('[DAT] No table found, returning early from processCurrentTable');
-    return; // No table present, nothing to do
-  }
-
-  
-
-
-
-  const isQualifications = header.innerText.startsWith('Qualifications');
-  const isProjects = header.innerText.startsWith('Projects');
-  //console.log({isQualifications, isProjects,header,activeHeader})
-
-
-  
-  // Add Task Counts to the Header
-  const taskCount = sumTableColumn(table, 2);
-  //console.log('[DAT] Calculated taskCount:', taskCount);
-
-
-  //modify exisiting data span if it exists
-  let existingSpan = header.querySelector('span[data-dat-task-count]');
-  console.log('existingSpan', existingSpan)
-  if (!existingSpan) {
-    const headerSpan = document.createElement('span');
-  headerSpan.style.fontSize = '65%';
-  headerSpan.style.verticalAlign = '-15%';
-  headerSpan.setAttribute('data-dat-task-count', 'true');
-  //set reference to the new span
-  existingSpan = headerSpan;
-  header.append(headerSpan);
-  }
-  //whether we had an existing span or not, we have a reference to it now either way. this avoids duplicate code.
-  existingSpan.innerText = ` with ${formatNumber(taskCount)} tasks`;
-
- 
-  //console.log('[DAT] Appended task count span to header');
-
-  // Only sort the table that is present
-  storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
-    //console.log('[DAT] storageGetFunction callback:', { sortPay, sortQualifications, isProjects, isQualifications });
-    if (isProjects && sortPay) {
-      //console.log('[DAT] Sorting projects table by Pay and Tasks');
-      sortTable(table, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
-    }
-    if (isQualifications && (sortQualifications || sortQualifications === undefined)) {
-      //console.log('[DAT] Sorting qualifications table by Created');
-      sortTable(table, [3], [sanitizer_Created]);
-    }
-  }, [true, true]);
+if (isProjectInProgress) {
+  [qualificationsHeader, projectsHeader] = [headers[1], headers[2]];
+  [qualificationsTable, projectsTable] = [tables[1], tables[2]];
+} else {
+  [qualificationsHeader, projectsHeader] = [headers[0], headers[1]];
+  [qualificationsTable, projectsTable] = [tables[0], tables[1]];
 }
 
-// Initial run
-//console.log('[DAT] Initial processCurrentTable run');
-processCurrentTable();
+/* Simple checks to ensure the UI is what we expect */
+const expectedInterface = [
+  qualificationsHeader.innerText.startsWith('Qualifications'),
+  projectsHeader.innerText.startsWith('Projects'),
+  qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
+  projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
+].every((test) => test === true);
 
+/* Throw an Error if it isn't */
+if (expectedInterface === false) {
+  // log each element for debugging //
+  //  console.log({
+  //   qualificationsHeader,
+  //    projectsHeader, 
+  //    qualificationsTable:qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''), 
+  //    projectsTable: projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('')
+  // });
 
-//capture the header container that holds the tab buttons
-const headerTabContainer = document.querySelector('div.tw-flex.tw-overflow-x-auto.md\\:tw-pl-4.tw-border-b.tw-border-gray-200.tw-bg-gray-50');
-// Set up a MutationObserver to watch for changes in the header container
-const observer = new MutationObserver((mutationsList) => {
-    // console.log('[DAT] MutationObserver triggered with mutations:', mutationsList.length);
-        processCurrentTable()
-    // }
-  });
+  throw new RangeError('DAT: Interface outside expected parameters, There may have been a site update which changed the UI');
+}
 
-observer.observe(headerTabContainer, { childList: false, subtree: true, attributes: true });
+/* Add Table Row Counts and Task Counts to their Respective Headers */
+const qualificationsCount = qualificationsTable.rows.length - 1;
+const qualificationsTaskCount = sumTableColumn(qualificationsTable, 2);
+const qualificationHeaderSpan = document.createElement('span');
+qualificationHeaderSpan.style.fontSize = '65%';
+qualificationHeaderSpan.style.verticalAlign = '-15%';
+qualificationHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(qualificationsCount)} with ${formatNumber(qualificationsTaskCount)} tasks`;
+qualificationsHeader.append(qualificationHeaderSpan);
 
-// Optionally, you can still listen for clicks to trigger the observer if needed
-// headerTabContainer.addEventListener('click', () => {
-//   // No need for setTimeout, observer will handle DOM changes
-// });
+const projectsCount = projectsTable.rows.length - 1;
+const projectsTaskCount = sumTableColumn(projectsTable, 2);
+const projectsHeaderSpan = document.createElement('span');
+projectsHeaderSpan.style.fontSize = '65%';
+projectsHeaderSpan.style.verticalAlign = '-15%';
+projectsHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(projectsCount)} with ${formatNumber(projectsTaskCount)} tasks`;
+projectsHeader.append(projectsHeaderSpan);
+/* Remove flex display to allow verticalAlign to function correctly */
+projectsHeader.classList.remove('tw-flex');
 
+//here we are modifying the qualification container. Often, especially when there are a ton of quals,
+//it gets in the way of looking at projects. We are resizing the container, and addind a resize style to it.
+const accentColor = window.getComputedStyle(document.querySelector("body > div.navbar")).backgroundColor;
+const textColor = window.getComputedStyle(document.querySelector("a.navbar-brand")).color;
+const qualificationsContainer = qualificationsTable.parentElement;
+qualificationsContainer.style.height = '155px';
+qualificationsContainer.style.resize ='vertical';
+qualificationsContainer.style.scrollSnapType = 'y mandatory';
+qualificationsContainer.style.scrollbarWidth = 'thin';
+qualificationsContainer.style.scrollbarColor = `${textColor} ${accentColor}`;
+
+storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
+  if (sortPay) {
+    sortTable(projectsTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
+  }
+  if (sortQualifications || sortQualifications === undefined) {
+    sortTable(qualificationsTable, [3], [sanitizer_Created]);
+  }
+}, [true, true]);
