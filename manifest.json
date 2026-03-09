@@ -28,7 +28,12 @@
     {
       "matches": [ "https://app.dataannotation.tech/workers/tasks/*" ],
       "js": [
-        "./scripts/skipCommand.js",
+        "./scripts/skipCommand.js"
+      ]
+    },
+     {
+      "matches": [ "https://app.dataannotation.tech/workers/tasks/*", "https://feedback.anthropic.com/*" ],
+      "js": [
         "./scripts/codeCopy.js"
       ]
     },
