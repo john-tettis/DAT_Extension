@@ -44,23 +44,32 @@ document.addEventListener('mousemove', function (event) {
 // Event listener for click to copy code from <pre> element
 document.addEventListener('click', function (event) { 
     const preElement = event.target.closest('pre');
-    if (preElement) {
-        const code = preElement.innerText; // Get code text from <pre> element
-        tooltip.textContent = 'Code Copied!'; // Update tooltip message
-        copyTextToClipboard(code); // Copy code to clipboard
-        setTimeout(() => {
-          //reset tooltip text and display after 1 second
-          tooltip.textContent = 'Click to Copy'
-          tooltip.style.display = 'none'; // Hide tooltip after 1 second
-        }, 1000);
-    }
+    // console.log(preElement);
+    if (!preElement) return; // Exit if click is not on a <pre> element
+    const firstChild = preElement.firstElementChild;
+    //normalize the various code containers we see - some with language specificators like html, css, js, etc. and some without.
+    if (firstChild && firstChild.tagName === 'DIV' && firstChild.className.includes('bg-stone-200')) {
+            // If the header exists, get the text from its sibling (the actual code container)
+            code = firstChild.firstChild ? firstChild.firstChild.nextElementSibling.innerText : preElement.innerText;
+        } else {
+            // Fallback for sites that don't have that header div
+            code = preElement.innerText;
+        }
+    tooltip.textContent = 'Code Copied!'; // Update tooltip message
+    copyTextToClipboard(code); // Copy code to clipboard
+    setTimeout(() => {
+        //reset tooltip text and display after 1 second
+        tooltip.textContent = 'Click to Copy'
+        tooltip.style.display = 'none'; // Hide tooltip after 1 second
+    }, 1000);
+
 }); 
 //new event listeners for glow effect. less intrusive.
 document.addEventListener('mouseover', function(event)         {  
     const preElement = event.target.closest('pre');                 
           if (preElement) {
         preElement.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.2)';
-        preElement.style.transform = 'scale(1.02)';
+        preElement.style.transform = 'scale(1.01)'; // Slightly enlarge the element
         preElement.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
          // Additional styles or actions can be added here for hover in                
     }                 
