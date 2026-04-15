@@ -231,3 +231,22 @@ storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualificati
     sortTable(qualificationsTable, [3], [sanitizer_Created]);
   }
 }, [true, true]);
+
+/* Rearrange the UI: Projects -> Easy Projects -> Qualifications */
+//NOT ACTIVE: Not really necessary, and the way the UI is structured makes it a bit of a pain to implement without risking breaking something. 
+//thought I would leave it here in case I want to come back to it in the future.
+
+
+// // 1. Navigate up 4 levels from the headers to get the true top-level wrapper for each section
+// const topLevelProjects = projectsHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
+// const topLevelEasy = easyProjectHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
+// const topLevelQuals = qualificationsHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
+
+// // 2. The parent of that top-level element is the true main container
+// const mainContainer = topLevelProjects.parentElement;
+
+// // // 3. Append the top-level blocks in the desired order
+// // mainContainer.appendChild(topLevelProjects);
+// // mainContainer.appendChild(topLevelEasy);
+// // mainContainer.appendChild(topLevelQuals);
+// console.log({mainContainer, topLevelProjects, topLevelEasy, topLevelQuals})
