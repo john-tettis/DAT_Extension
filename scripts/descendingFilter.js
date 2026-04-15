@@ -69,13 +69,23 @@ function sortTable(table, sortColumnIndices, sanitizers= [((value) => value.inne
 
 
 /* Wrapper function to allow for easier testing regardless of API availability */
-function storageGetFunction(options, callback, fallbackDefaults = new Array(options.length).fill(true)) {
-  if (chrome?.storage?.sync?.get) {
-    chrome.storage.sync.get(options, callback);
-  }
-  else{
-    const optionObject = Object.fromEntries(options.map((key, index) => [key, fallbackDefaults[index]]));
-    callback(optionObject);
+function storageGetFunction(options, callback, fallbackDefaults) {
+  // 1. Create a default object: { key1: true, key2: true }
+  // We use the provided defaults or fall back to 'true' for every key
+  const defaults = Object.fromEntries(
+    options.map((key, index) => [
+      key, 
+      fallbackDefaults && fallbackDefaults[index] !== undefined ? fallbackDefaults[index] : true
+    ])
+  );
+
+  if (typeof chrome !== 'undefined' && chrome.storage?.sync?.get) {
+    // 2. Passing the object 'defaults' ensures Chrome returns the 
+    // default value if the key is not yet set in storage.
+    chrome.storage.sync.get(defaults, callback);
+  } else {
+    // 3. Environment fallback (testing)
+    callback(defaults);
   }
 }
 
@@ -146,35 +156,39 @@ const tables = document.querySelectorAll('table');
 const isProjectInProgress = headers[0].innerText.startsWith('In Progress');
 
 // Declare variables in outer scope so they're available throughout the script
-let qualificationsHeader, projectsHeader, qualificationsTable, projectsTable;
+let qualificationsHeader, projectsHeader, easyProjectHeader,qualificationsTable, easyProjectTable, projectsTable;
 
 if (isProjectInProgress) {
-  [qualificationsHeader, projectsHeader] = [headers[1], headers[2]];
-  [qualificationsTable, projectsTable] = [tables[1], tables[2]];
+  [qualificationsHeader, easyProjectHeader, projectsHeader] = [headers[1], headers[2], headers[3]];
+  [qualificationsTable, easyProjectTable, projectsTable] = [tables[1], tables[2], tables[3]];
 } else {
-  [qualificationsHeader, projectsHeader] = [headers[0], headers[1]];
-  [qualificationsTable, projectsTable] = [tables[0], tables[1]];
+  [qualificationsHeader,easyProjectHeader, projectsHeader] = [headers[0], headers[1], headers[2]];
+  [qualificationsTable, easyProjectTable, projectsTable] = [tables[0], tables[1], tables[2]];
 }
 
 /* Simple checks to ensure the UI is what we expect */
 const expectedInterface = [
   qualificationsHeader.innerText.startsWith('Qualifications'),
+  easyProjectHeader.innerText.startsWith('⚡ Easier Projects'),
   projectsHeader.innerText.startsWith('Projects'),
   qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
+  easyProjectTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
   projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
 ].every((test) => test === true);
 
 /* Throw an Error if it isn't */
 if (expectedInterface === false) {
   // log each element for debugging //
-  //  console.log({
-  //   qualificationsHeader,
-  //    projectsHeader, 
-  //    qualificationsTable:qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''), 
-  //    projectsTable: projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('')
-  // });
+   console.log({
+    qualificationsHeader,
+     projectsHeader, 
+     qualificationsTable:qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''), 
+     projectsTable: projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''),
+     easyProjectHeader,
+     easyProjectTable: easyProjectTable.tHead.firstChild.textContent.split('Filter and sort options').join('')
+  });
 
-  throw new RangeError('DAT: Interface outside expected parameters, There may have been a site update which changed the UI');
+  console.warn('DAT: Interface outside expected parameters, There may have been a site update which changed the UI. Some functionality may be impaired, and errors may occur. Please report this to the developer with the above console log for debugging.');
 }
 
 /* Add Table Row Counts and Task Counts to their Respective Headers */
@@ -208,8 +222,10 @@ qualificationsContainer.style.scrollbarWidth = 'thin';
 qualificationsContainer.style.scrollbarColor = `${textColor} ${accentColor}`;
 
 storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
+  console.log({sortPay})
   if (sortPay) {
     sortTable(projectsTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
+    sortTable(easyProjectTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
   }
   if (sortQualifications || sortQualifications === undefined) {
     sortTable(qualificationsTable, [3], [sanitizer_Created]);
