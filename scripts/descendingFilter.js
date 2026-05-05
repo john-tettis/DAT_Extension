@@ -149,104 +149,109 @@ const sanitizer_Priority = makeSanitizer((element) => {
   return element.innerText.toUpperCase().indexOf('PRIORITY') > -1 ? 1 : 0;
 });
 
-/* Section Header and Tables, Purposefully Excluding Report Time Section */
-const headers = document.querySelectorAll('h3');
-const tables = document.querySelectorAll('table');
+/* --- DYNAMIC TABLE PROCESSING FOR TAB SYSTEM --- */
 
-const isProjectInProgress = headers[0].innerText.startsWith('In Progress');
+function processTables() {
+  const tables = document.querySelectorAll('table');
+  
+  tables.forEach(table => {
+    // Only process tables that haven't been sorted/modified yet
+    if (table.dataset.datProcessed) return;
 
-// Declare variables in outer scope so they're available throughout the script
-let qualificationsHeader, projectsHeader, easyProjectHeader,qualificationsTable, easyProjectTable, projectsTable;
+    // Check if table is fully populated. A quick check is if it has a tBody with rows.
+    if (!table.tBodies || table.tBodies.length === 0 || table.tBodies[0].rows.length === 0) {
+      return; // Wait until rows are rendered
+    }
 
-if (isProjectInProgress) {
-  [qualificationsHeader, easyProjectHeader, projectsHeader] = [headers[1], headers[2], headers[3]];
-  [qualificationsTable, easyProjectTable, projectsTable] = [tables[1], tables[2], tables[3]];
-} else {
-  [qualificationsHeader,easyProjectHeader, projectsHeader] = [headers[0], headers[1], headers[2]];
-  [qualificationsTable, easyProjectTable, projectsTable] = [tables[0], tables[1], tables[2]];
-}
+    const tHeadText = table.tHead ? table.tHead.firstChild.textContent.replace(/Filter and sort options/g, '') : '';
+    const container = table.closest('.active-table') || table.parentElement.parentElement;
+    const h3 = container ? container.querySelector('h3') : null;
+    
+    let tableType = null;
 
-/* Simple checks to ensure the UI is what we expect */
-const expectedInterface = [
-  qualificationsHeader.innerText.startsWith('Qualifications'),
-  easyProjectHeader.innerText.startsWith('⚡ Easier Projects'),
-  projectsHeader.innerText.startsWith('Projects'),
-  qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
-  easyProjectTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPin',
-  projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join('') === 'NamePayTasksCreatedPinHide',
-].every((test) => test === true);
+    // Determine which table this is
+    if (h3 && h3.innerText.includes('All Projects')) {
+      tableType = 'projects';
+    } else if (h3 && (h3.innerText.includes('Easier Projects') || h3.dataset.testid === 'easier-projects-header')) {
+      tableType = 'easyProjects';
+    } else {
+      // Check active tab to infer
+      const activeTabSpan = document.querySelector('div[role="button"].tw-bg-white span.tw-font-medium');
+      const activeTabText = activeTabSpan ? activeTabSpan.innerText : '';
 
-/* Throw an Error if it isn't */
-if (expectedInterface === false) {
-  // log each element for debugging //
-   console.log({
-    qualificationsHeader,
-     projectsHeader, 
-     qualificationsTable:qualificationsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''), 
-     projectsTable: projectsTable.tHead.firstChild.textContent.split('Filter and sort options').join(''),
-     easyProjectHeader,
-     easyProjectTable: easyProjectTable.tHead.firstChild.textContent.split('Filter and sort options').join('')
+      if (activeTabText.includes('Qualifications')) {
+        tableType = 'qualifications';
+      } else if (activeTabText.includes('Projects')) {
+        if (tHeadText.includes('Hide')) {
+          tableType = 'projects';
+        } else {
+          tableType = 'easyProjects';
+        }
+      }
+    }
+
+    if (!tableType) return;
+    
+    // Mark as processed so we don't apply the counts and sorting infinitely
+    table.dataset.datProcessed = tableType;
+
+    // 1. Add Task Counts
+    // Flat all rows across all tBodies just in case
+    const allRows = [...table.tBodies].map((tBody) => [...tBody.rows]).flat();
+    const rowCount = allRows.length;
+    const taskCount = sumTableColumn(table, 2);
+    
+    const countSpan = document.createElement('span');
+    countSpan.style.fontSize = '65%';
+    countSpan.style.verticalAlign = '-15%';
+    countSpan.innerText = `\u0020\u0020\u0020${formatNumber(rowCount)} with ${formatNumber(taskCount)} tasks`;
+    countSpan.className = 'dat-task-count';
+    
+    if (h3 && h3.innerText.trim() !== '') {
+      h3.append(countSpan);
+      h3.classList.remove('tw-flex');
+    } else {
+      // If there is no valid h3 (like on the Qualifications tab), insert one above the table
+      const newHeader = document.createElement('h3');
+      newHeader.className = 'tw-text-h3 tw-flex tw-flex-1 tw-items-center tw-mb-4 tw-mt-4';
+      newHeader.innerText = tableType === 'easyProjects' ? 'Easier Projects' : (tableType.charAt(0).toUpperCase() + tableType.slice(1));
+      newHeader.append(countSpan);
+      if (table.parentElement) {
+        table.parentElement.insertBefore(newHeader, table);
+      }
+    }
+
+    // 2. Sorting
+    storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
+      console.log({sortPay});
+      if (tableType === 'projects' && sortPay) {
+        sortTable(table, [1, 2], [sanitizer_Pay, sanitizer_Tasks]);
+      } else if (tableType === 'easyProjects' && sortPay) {
+        sortTable(table, [1, 2], [sanitizer_Pay, sanitizer_Tasks]);
+      } else if (tableType === 'qualifications' && (sortQualifications || sortQualifications === undefined)) {
+        sortTable(table, [3], [sanitizer_Created]);
+      }
+    }, [true, true]);
+
   });
-
-  console.warn('DAT: Interface outside expected parameters, There may have been a site update which changed the UI. Some functionality may be impaired, and errors may occur. Please report this to the developer with the above console log for debugging.');
 }
 
-/* Add Table Row Counts and Task Counts to their Respective Headers */
-const qualificationsCount = qualificationsTable.rows.length - 1;
-const qualificationsTaskCount = sumTableColumn(qualificationsTable, 2);
-const qualificationHeaderSpan = document.createElement('span');
-qualificationHeaderSpan.style.fontSize = '65%';
-qualificationHeaderSpan.style.verticalAlign = '-15%';
-qualificationHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(qualificationsCount)} with ${formatNumber(qualificationsTaskCount)} tasks`;
-qualificationsHeader.append(qualificationHeaderSpan);
+// Run initially just in case they are already rendered
+processTables();
 
-const projectsCount = projectsTable.rows.length - 1;
-const projectsTaskCount = sumTableColumn(projectsTable, 2);
-const projectsHeaderSpan = document.createElement('span');
-projectsHeaderSpan.style.fontSize = '65%';
-projectsHeaderSpan.style.verticalAlign = '-15%';
-projectsHeaderSpan.innerText = `\u0020\u0020\u0020${formatNumber(projectsCount)} with ${formatNumber(projectsTaskCount)} tasks`;
-projectsHeader.append(projectsHeaderSpan);
-/* Remove flex display to allow verticalAlign to function correctly */
-projectsHeader.classList.remove('tw-flex');
-
-//here we are modifying the qualification container. Often, especially when there are a ton of quals,
-//it gets in the way of looking at projects. We are resizing the container, and addind a resize style to it.
-const accentColor = window.getComputedStyle(document.querySelector("body > div.navbar")).backgroundColor;
-const textColor = window.getComputedStyle(document.querySelector("a.navbar-brand")).color;
-const qualificationsContainer = qualificationsTable.parentElement;
-qualificationsContainer.style.height = '155px';
-qualificationsContainer.style.resize ='vertical';
-qualificationsContainer.style.scrollSnapType = 'y mandatory';
-qualificationsContainer.style.scrollbarWidth = 'thin';
-qualificationsContainer.style.scrollbarColor = `${textColor} ${accentColor}`;
-
-storageGetFunction(['sortPay', 'sortQualifications'], ({sortPay, sortQualifications}) => {
-  console.log({sortPay})
-  if (sortPay) {
-    sortTable(projectsTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
-    sortTable(easyProjectTable, [1,2], [sanitizer_Pay,sanitizer_Tasks]);
+// Set up MutationObserver to handle tab switching and dynamic loading
+const observer = new MutationObserver((mutations) => {
+  let shouldProcess = false;
+  for (const mutation of mutations) {
+    if (mutation.addedNodes.length > 0) {
+      shouldProcess = true;
+      break;
+    }
   }
-  if (sortQualifications || sortQualifications === undefined) {
-    sortTable(qualificationsTable, [3], [sanitizer_Created]);
+  if (shouldProcess) {
+    // Let React finish rendering its frame
+    setTimeout(processTables, 100);
   }
-}, [true, true]);
+});
 
-/* Rearrange the UI: Projects -> Easy Projects -> Qualifications */
-//NOT ACTIVE: Not really necessary, and the way the UI is structured makes it a bit of a pain to implement without risking breaking something. 
-//thought I would leave it here in case I want to come back to it in the future.
-
-
-// // 1. Navigate up 4 levels from the headers to get the true top-level wrapper for each section
-// const topLevelProjects = projectsHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
-// const topLevelEasy = easyProjectHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
-// const topLevelQuals = qualificationsHeader.parentElement.parentElement.parentElement.parentElement.parentElement;
-
-// // 2. The parent of that top-level element is the true main container
-// const mainContainer = topLevelProjects.parentElement;
-
-// // // 3. Append the top-level blocks in the desired order
-// // mainContainer.appendChild(topLevelProjects);
-// // mainContainer.appendChild(topLevelEasy);
-// // mainContainer.appendChild(topLevelQuals);
-// console.log({mainContainer, topLevelProjects, topLevelEasy, topLevelQuals})
+observer.observe(document.body, { childList: true, subtree: true });
